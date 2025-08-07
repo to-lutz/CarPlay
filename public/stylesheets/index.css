@@ -184,7 +184,7 @@ body {
 }
 
 .app-music-left, .app-music-right {
-    width: 65%;
+    width: 60%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -192,7 +192,7 @@ body {
 }
 
 .app-music-right {
-    width: 35%;
+    width: 40%;
 }
 
 .music-album-cover {
@@ -216,11 +216,11 @@ body {
 .app-music-track-info {
     text-align: center;
     font-family: SF-Pro-Semibold, sans-serif;
-    font-size: 20px;
+    font-size: 22px;
 }
 
 .app-music-track-name {
-    font-size: 26px;
+    font-size: 28px;
     font-weight: bold;
     margin: 10px 0;
 }
