@@ -184,7 +184,7 @@ body {
 }
 
 .app-music-left, .app-music-right {
-    width: 60%;
+    width: 70%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -192,7 +192,7 @@ body {
 }
 
 .app-music-right {
-    width: 40%;
+    width: 30%;
 }
 
 .music-album-cover {
