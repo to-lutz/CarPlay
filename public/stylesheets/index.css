@@ -240,5 +240,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
 
+.music-controls {
+    font-size: 2.5em;
 }
