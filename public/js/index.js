@@ -52,6 +52,10 @@ function openApp(appName) {
 }
 
 async function startMusicApp() {
+    refreshTrack();
+}
+
+function refreshTrack() {
     try {
         const response = await fetch('/getCurrentTrack');
 
@@ -96,8 +100,10 @@ document.querySelector('.music-control-prev').addEventListener('click', async ()
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
-        startMusicApp(); // Refresh the current track display
+        // Refresh the current track display
+        setInterval(() => {
+            refreshTrack();
+        }, 1000);
     } catch (error) {
         console.error('Error going to previous track:', error);
     }
@@ -109,8 +115,10 @@ document.querySelector('.music-control-next').addEventListener('click', async ()
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
-        startMusicApp(); // Refresh the current track display
+        // Refresh the current track display
+        setInterval(() => {
+            refreshTrack();
+        }, 1000);
     } catch (error) {
         console.error('Error going to next track:', error);
     }
