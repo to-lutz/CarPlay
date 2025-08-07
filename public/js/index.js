@@ -89,3 +89,25 @@ async function startMusicApp() {
         window.location.href = '/login';
     }
 }
+
+document.querySelector('.music-control-play-pause').addEventListener('click', async () => {
+    try {
+        const response = await fetch('/playPause', { method: 'POST' });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Play/Pause response:', data);
+        if (document.querySelector('.music-control-play-pause').classList.contains('fa-pause')) {
+            document.querySelector('.music-control-play-pause').classList.remove('fa-pause');
+            document.querySelector('.music-control-play-pause').classList.add('fa-play');
+        } else {
+            document.querySelector('.music-control-play-pause').classList.remove('fa-play');
+            document.querySelector('.music-control-play-pause').classList.add('fa-pause');
+        }
+    } catch (error) {
+        console.error('Error toggling play/pause:', error);
+    }
+});

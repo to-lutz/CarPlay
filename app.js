@@ -81,5 +81,20 @@ app.get("/getCurrentTrack", async (req, res) => {
   }
 });
 
+app.post("/playPause", async (req, res) => {
+  try {
+    const data = await spotifyApi.getMyCurrentPlaybackState();
+    if (data.body.is_playing) {
+      await spotifyApi.pause();
+    } else {
+      await spotifyApi.play();
+    }
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error toggling play/pause:', error);
+    res.status(500).send('Error toggling play/pause');
+  }
+}); 
+
 
 module.exports = app;
