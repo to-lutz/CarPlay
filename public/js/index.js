@@ -58,7 +58,6 @@ async function startMusicApp() {
 }
 
 async function refreshTrack() {
-    console.log('Refreshing current track...');
     try {
         const response = await fetch('/getCurrentTrack');
 
@@ -75,12 +74,20 @@ async function refreshTrack() {
             const albumName = item.album.name;
             const albumImage = item.album.images[0].url;
             const artists = item.artists.map(artist => artist.name).join(', ');
+            const isPlaying = data.is_playing;
 
             document.querySelector('.music-album-background').src = albumImage;
             document.querySelector('.music-album-cover').src = albumImage
             document.querySelector('#song-name').textContent = songName;
             document.querySelector('#album-name').textContent = albumName;
             document.querySelector('#artist-names').textContent = artists;
+            if (isPlaying) {
+                document.querySelector('.music-control-play-pause').classList.remove('fa-play');
+                document.querySelector('.music-control-play-pause').classList.add('fa-pause');
+            } else {
+                document.querySelector('.music-control-play-pause').classList.remove('fa-pause');
+                document.querySelector('.music-control-play-pause').classList.add('fa-play');
+            }
         } else {
             document.querySelector('.app-music-wrapper').innerHTML = `
                 <h1>No track playing</h1>
