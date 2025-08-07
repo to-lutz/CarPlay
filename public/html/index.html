@@ -15,9 +15,35 @@
 
     <link rel="manifest" href="/js/pwa.webmanifest">
     <link rel="stylesheet" href="../stylesheets/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+        integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
+
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="time-battery-wrapper">
+                <p class="sidebar-text" id="time-sidebar">09:41</p>
+                <div class="battery-wrapper">
+                    <i class="fa-solid fa-battery battery-sidebar-icon"></i>
+                    <p class="sidebar-text sidebar-battery-text" id="battery-sidebar">100%</p>
+                </div>
+            </div>
+            <div class="apps-wrapper">
+                <div class="app" id="maps">
+                    <img src="../images/icons/apps/apple_maps.png" alt="Apple Maps Icon" class="app-icon">
+                </div>
+                <div class="app" id="music">
+                    <img src="../images/icons/apps/apple_music.png" alt="Apple Music Icon" class="app-icon">
+                </div>
+                <div class="app" id="calendar">
+                    <img src="../images/icons/apps/apple_calendar.png" alt="Apple Calendar Icon" class="app-icon">
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 

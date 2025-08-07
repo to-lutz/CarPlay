@@ -1,3 +1,13 @@
+@font-face {
+    font-family: SF-Pro;
+    src: url('../fonts/Apple-Fonts/SF-Pro.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: SF-Pro-Semibold;
+    src: url('../fonts/Apple-Fonts/SF-Pro-Text-Semibold.otf') format('opentype');
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -10,4 +20,63 @@ html, body {
     -webkit-user-select: none;
     -webkit-overflow-scrolling: touch;
     touch-action: none;
+    font-family: SF-Pro, sans-serif;
+    color: white;
+}
+
+.wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar {
+    height: 100%;
+    width: 150px;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    font-family: SF-Pro-Semibold, sans-serif;
+    font-size: 32px;
+    padding: 15px 0px;
+}
+
+.sidebar-text {
+    margin: 5px 0;
+}
+
+.time-battery-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.battery-wrapper {
+    display: flex;
+    width: 70%;
+    justify-content: space-evenly;
+}
+
+.battery-sidebar-icon {
+    font-size: .8em;
+}
+
+.sidebar-battery-text {
+    font-size: 20px;
+    margin-top: 0px;
+}
+
+.app-icon {
+    width: 65px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.app-icon:last-child {
+    margin-bottom: 0;
 }
