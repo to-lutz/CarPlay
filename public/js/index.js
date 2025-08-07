@@ -84,5 +84,7 @@ async function startMusicApp() {
         document.querySelector('.app-music-wrapper').innerHTML = `
             <h1>Error fetching track</h1>
         `;
+        // Redirect to /login
+        window.location.href = '/login';
     }
 }

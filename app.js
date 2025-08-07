@@ -55,19 +55,15 @@ app.get('/callback', (req, res) => {
     spotifyApi.setAccessToken(accessToken);
     spotifyApi.setRefreshToken(refreshToken);
 
-    // Logging tokens can be a security risk; this should be avoided in production.
-    console.log('The access token is ' + accessToken);
-    console.log('The refresh token is ' + refreshToken);
-
-    // Send a success message to the user.
-    res.send('Login successful! You can now use the /search and /play endpoints.');
-
     // Refresh the access token periodically before it expires.
     setInterval(async () => {
       const data = await spotifyApi.refreshAccessToken();
       const accessTokenRefreshed = data.body['access_token'];
       spotifyApi.setAccessToken(accessTokenRefreshed);
     }, expiresIn / 2 * 1000); // Refresh halfway before expiration.
+
+    // redirect to home page
+    res.redirect('/');
 
   }).catch(error => {
     console.error('Error getting Tokens:', error);
