@@ -18,3 +18,7 @@ appicons.forEach((el) => {
         }, 300);
     });
 });
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("../js/serviceworker.js");
+}
