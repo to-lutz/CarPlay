@@ -172,12 +172,33 @@ body {
 }
 
 .app-music-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 100%;
     background: rgba(167, 164, 164, 0.2);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     z-index: 10;
+}
+
+.app-music-left, .app-music-right {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.app-music-right {
+    width: 25%;
+}
+
+.music-album-cover {
+    width: 250px;
+    height: 250px;
+    border-radius: 10px;
 }
 
 .music-album-background {
@@ -188,8 +209,36 @@ body {
     height: 100%;
     object-fit: cover;
     z-index: 9;
-    filter: blur(20px) brightness(0.6);
-    opacity: 0.8;
-    transform: scale(1.1);
+    filter: blur(10px) brightness(0.6);
     pointer-events: none;
+}
+
+.app-music-track-info {
+    text-align: center;
+    font-family: SF-Pro-Semibold, sans-serif;
+    font-size: 20px;
+}
+
+.app-music-track-name {
+    font-size: 26px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.app-music-artist-names {
+    margin: 5px 0;
+}
+
+.app-music-album-name {
+    margin: 5px 0;
+    color: #51c8f3;
+}
+
+.app-music-controls {
+    width: 50%;
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
 }

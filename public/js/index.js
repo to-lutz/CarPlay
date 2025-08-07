@@ -70,6 +70,7 @@ async function startMusicApp() {
             const artists = item.artists.map(artist => artist.name).join(', ');
 
             document.querySelector('.music-album-background').src = albumImage;
+            document.querySelector('.music-album-cover').src = albumImage
             document.querySelector('#song-name').textContent = songName;
             document.querySelector('#album-name').textContent = albumName;
             document.querySelector('#artist-names').textContent = artists;
