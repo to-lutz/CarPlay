@@ -90,6 +90,32 @@ async function startMusicApp() {
     }
 }
 
+document.querySelector('.music-control-prev').addEventListener('click', async () => {
+    try {
+        const response = await fetch('/previous', { method: 'POST' });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        startMusicApp(); // Refresh the current track display
+    } catch (error) {
+        console.error('Error going to previous track:', error);
+    }
+});
+
+document.querySelector('.music-control-next').addEventListener('click', async () => {
+    try {
+        const response = await fetch('/skip', { method: 'POST' });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        startMusicApp(); // Refresh the current track display
+    } catch (error) {
+        console.error('Error going to next track:', error);
+    }
+});
+
 document.querySelector('.music-control-play-pause').addEventListener('click', async () => {
     try {
         const response = await fetch('/playPause', { method: 'POST' });

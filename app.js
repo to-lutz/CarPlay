@@ -96,5 +96,25 @@ app.post("/playPause", async (req, res) => {
   }
 }); 
 
+app.post('/skip', async (req, res) => {
+  try {
+    await spotifyApi.skipToNext();
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error skipping track:', error);
+    res.status(500).send('Error skipping track');
+  }
+});
+
+app.post('/previous', async (req, res) => {
+  try {
+    await spotifyApi.skipToPrevious();
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error going to previous track:', error);
+    res.status(500).send('Error going to previous track');
+  }
+});
+
 
 module.exports = app;
