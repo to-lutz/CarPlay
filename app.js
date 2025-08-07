@@ -75,5 +75,15 @@ app.get('/callback', (req, res) => {
   });
 });
 
+app.get("/getCurrentTrack", async (req, res) => {
+  try {
+    const data = await spotifyApi.getMyCurrentPlayingTrack();
+    res.json(data.body);
+  } catch (error) {
+    console.error('Error getting current track:', error);
+    res.status(500).send('Error getting current track');
+  }
+});
+
 
 module.exports = app;
