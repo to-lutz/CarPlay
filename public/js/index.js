@@ -58,6 +58,7 @@ async function startMusicApp() {
 }
 
 async function refreshTrack() {
+    console.log('Refreshing current track...');
     try {
         const response = await fetch('/getCurrentTrack');
 
