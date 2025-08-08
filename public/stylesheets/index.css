@@ -281,7 +281,7 @@ body {
 }
 
 .app-music-controls {
-    width: 50%;
+    width: 80%;
     margin: 20px 0;
     display: flex;
     justify-content: space-between;
