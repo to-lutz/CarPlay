@@ -104,6 +104,18 @@ async function refreshTrack() {
                 document.querySelector('.music-control-play-pause').classList.remove('fa-pause');
                 document.querySelector('.music-control-play-pause').classList.add('fa-play');
             }
+            // Update progress bar
+            const progress = data.progress_ms || 0;
+            const duration = item.duration_ms || 0;
+            const progressBar = document.getElementById('progress-bar');
+            const currentTime = document.getElementById('current-time');
+            const durationElement = document.getElementById('duration');
+
+            progressBar.style.width = `${(progress / duration) * 100}%`;
+            currentTime.textContent = new Date(progress).toISOString().substr(14, 5);
+            // Remaining duration in format -m:ss (ex: -2:50)
+            const remainingTime = new Date(duration - progress).toISOString().substr(14,5);
+            durationElement.textContent = `-${remainingTime}`;
         } else {
             document.querySelector('.app-music-wrapper').innerHTML = `
                 <h1>No track playing</h1>
