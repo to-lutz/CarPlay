@@ -1,0 +1,5 @@
+{
+  "appId": "de.tolutz.carplay",
+  "appName": "CarPlay",
+  "webDir": "public/html"
+}

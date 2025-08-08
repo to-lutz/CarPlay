@@ -37,6 +37,10 @@ document.querySelectorAll('.app-big').forEach(icon => {
     });
 });
 
+document.querySelector('.time-battery-wrapper').addEventListener('click', () => {
+    closeApp();
+});
+
 function openApp(appName) {
     document.querySelector('.open-app-overlay').style.display = 'flex';
     document.querySelector('.open-app-overlay').style.visibility = 'visible';
@@ -49,6 +53,13 @@ function openApp(appName) {
             startMusicApp();
             break;
     }
+}
+
+function closeApp() {
+    document.querySelector('.open-app-overlay').style.display = 'none';
+    document.querySelector('.open-app-overlay').style.visibility = 'hidden';
+    document.querySelector('.main-page').style.display = 'flex';
+    document.querySelector('.main-page').style.visibility = 'visible';
 }
 
 async function startMusicApp() {
