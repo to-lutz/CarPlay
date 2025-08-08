@@ -183,6 +183,38 @@ body {
     z-index: 10;
 }
 
+.app-music-header {
+    position: absolute;
+    top: 20px;
+    left: 150px;
+    font-size: 32px;
+    font-family: SF-Pro-Semibold, sans-serif;
+    color: white;
+    z-index: 11;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.back-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
 .app-music-left, .app-music-right {
     width: 65%;
     display: flex;

@@ -41,6 +41,11 @@ document.querySelector('.time-battery-wrapper').addEventListener('click', () => 
     closeApp();
 });
 
+document.querySelector('.back-button').addEventListener('click', () => {
+    closeApp();
+    // TODO: Show previous "layer" / page of the app
+});
+
 function openApp(appName) {
     document.querySelector('.open-app-overlay').style.display = 'flex';
     document.querySelector('.open-app-overlay').style.visibility = 'visible';
