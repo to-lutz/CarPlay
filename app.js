@@ -137,5 +137,38 @@ app.get('/playlists/:playlistId/tracks', async (req, res) => {
   }
 });
 
+app.post('/playlists/:playlistId/shuffle', async (req, res) => {
+  const playlistId = req.params.playlistId;
+  try {
+    // Get the tracks of the playlist
+    const data = await spotifyApi.getPlaylistTracks(playlistId);
+    const tracks = data.body.items.map(item => item.track.uri);
+    // Shuffle the tracks
+    const shuffledTracks = tracks.sort(() => Math.random() - 0.5);
+    // Start playback with shuffled tracks
+    await spotifyApi.play({ uris: shuffledTracks });
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error playing shuffled playlist:', error);
+    res.status(500).send('Error playing shuffled playlist');
+  }
+});
+
+// Play a specific track in playlist (and then queue next ones)
+app.post('/playlists/:playlistId/playTrack', async (req, res) => {
+  const playlistId = req.params.playlistId;
+  const trackUri = req.body.trackUri;
+  try {
+    const data = await spotifyApi.getPlaylistTracks(playlistId);
+    const tracks = data.body.items.map(item => item.track.uri);
+    
+    await spotifyApi.play({ uris: [trackUri, ...tracks.filter(uri => uri !== trackUri)] });
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error playing track from playlist:', error);
+    res.status(500).send('Error playing track from playlist');
+  }
+});
+
 
 module.exports = app;

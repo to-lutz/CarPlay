@@ -119,6 +119,31 @@ function fetchAndDisplayPlaylists() {
                                 <span class="app-music-playlist-track-artist">${track.track.artists.map(artist => artist.name).join(', ')}</span>
                             </div>
                         `;
+                                        trackElement.addEventListener('click', () => {
+                                            // Start playback of the selected track
+                                            fetch(`/playlists/${playlist.id}/playTrack`, {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json'
+                                                },
+                                                body: JSON.stringify({ trackUri: track.track.uri })
+                                            })
+                                                .then(response => {
+                                                    if (!response.ok) {
+                                                        throw new Error(`HTTP error! status: ${response.status}`);
+                                                    }
+                                                    return response.json();
+                                                })
+                                                .then(() => {
+                                                    refreshTrack(); // Refresh the current track display
+                                                })
+                                                .catch(error => {
+                                                    console.error('Error playing track from playlist:', error);
+                                                });
+                                            // Show player view
+                                            openPlayerView();
+                                        });
+                                            
                                         tracksContainer.appendChild(trackElement);
                                     });
                                 }
@@ -267,7 +292,12 @@ document.querySelectorAll('.back-button').forEach(e => e.addEventListener('click
 document.querySelector('.playing-button').addEventListener('click', () => {
     // If in music app, go to the player view
     if (document.querySelector('.app-music').style.display === 'flex') {
-        document.querySelector('.app-music-home').style.display = 'none';
+        openPlayerView();
+    }
+});
+
+function openPlayerView() {
+            document.querySelector('.app-music-home').style.display = 'none';
         document.querySelector('.app-music-home').style.visibility = 'hidden';
         document.querySelector('.app-music-playlist').style.display = 'none';
         document.querySelector('.app-music-playlist').style.visibility = 'hidden';
@@ -282,8 +312,7 @@ document.querySelector('.playing-button').addEventListener('click', () => {
         document.querySelector('.back-button').style.visibility = 'visible';
         // Hide playing button
         document.querySelector('.playing-button').style.visibility = 'hidden';
-    }
-});
+}
 
 function openApp(appName) {
     closeApp(); // Close any open app first
