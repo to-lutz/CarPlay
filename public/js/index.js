@@ -26,16 +26,36 @@ if ("serviceWorker" in navigator) {
 document.querySelectorAll('.app').forEach(icon => {
     icon.addEventListener('click', () => {
         let appName = icon.id;
-        openApp(appName);
+        if (appName != "siri") openApp(appName);
     });
 });
 
 document.querySelectorAll('.app-big').forEach(icon => {
     icon.addEventListener('click', () => {
         let appName = icon.id;
-        openApp(appName);
+        if (appName != "siri") openApp(appName);
     });
 });
+
+function handleSiriStart() {
+document.querySelector('#siri-border').classList.add('siri-border');
+}
+
+function handleSiriStop() {
+    if (document.querySelector('.siri-border')) {
+        document.querySelector('#siri-border').classList.remove('siri-border');
+    }
+}
+
+let siriButton = document.querySelector('#siri');
+
+siriButton.addEventListener('mousedown', handleSiriStart);
+siriButton.addEventListener('touchstart', handleSiriStart);
+
+siriButton.addEventListener('mouseup', handleSiriStop);
+siriButton.addEventListener('mouseleave', handleSiriStop);
+siriButton.addEventListener('touchend', handleSiriStop);
+siriButton.addEventListener('touchcancel', handleSiriStop);
 
 document.querySelector('.time-battery-wrapper').addEventListener('click', () => {
     closeApp();
@@ -165,7 +185,7 @@ function fetchAndDisplayPlaylists() {
                                             // Show player view
                                             openPlayerView();
                                         });
-                                            
+
                                         tracksContainer.appendChild(trackElement);
                                     });
                                 }
@@ -319,21 +339,21 @@ document.querySelector('.playing-button').addEventListener('click', () => {
 });
 
 function openPlayerView() {
-            document.querySelector('.app-music-home').style.display = 'none';
-        document.querySelector('.app-music-home').style.visibility = 'hidden';
-        document.querySelector('.app-music-playlist').style.display = 'none';
-        document.querySelector('.app-music-playlist').style.visibility = 'hidden';
-        document.querySelector('.app-music-player').style.display = 'flex';
-        document.querySelector('.app-music-player').style.visibility = 'visible';
-        document.querySelector('.app-music-wrapper').style.display = 'flex';
-        document.querySelector('.app-music-wrapper').style.visibility = 'visible';
-        // Show album cover
-        document.querySelector('.music-album-background').style.display = 'block';
-        document.querySelector('.music-album-background').style.visibility = 'visible';
-        // Show back button
-        document.querySelector('.back-button').style.visibility = 'visible';
-        // Hide playing button
-        document.querySelector('.playing-button').style.visibility = 'hidden';
+    document.querySelector('.app-music-home').style.display = 'none';
+    document.querySelector('.app-music-home').style.visibility = 'hidden';
+    document.querySelector('.app-music-playlist').style.display = 'none';
+    document.querySelector('.app-music-playlist').style.visibility = 'hidden';
+    document.querySelector('.app-music-player').style.display = 'flex';
+    document.querySelector('.app-music-player').style.visibility = 'visible';
+    document.querySelector('.app-music-wrapper').style.display = 'flex';
+    document.querySelector('.app-music-wrapper').style.visibility = 'visible';
+    // Show album cover
+    document.querySelector('.music-album-background').style.display = 'block';
+    document.querySelector('.music-album-background').style.visibility = 'visible';
+    // Show back button
+    document.querySelector('.back-button').style.visibility = 'visible';
+    // Hide playing button
+    document.querySelector('.playing-button').style.visibility = 'hidden';
 }
 
 function openApp(appName) {
