@@ -109,16 +109,6 @@ document.addEventListener('touchend', (e) => {
                 document.querySelector('.app-music-home').style.display = 'flex';
                 document.querySelector('.app-music-home').style.visibility = 'visible';
 
-                document.querySelector('.app-music-home-start').style.display = 'flex';
-                document.querySelector('.app-music-home-start').style.visibility = 'visible';
-                document.querySelector('.app-music-home-search').style.display = 'none';
-                document.querySelector('.app-music-home-search').style.visibility = 'hidden';
-                document.querySelector('.app-music-home-library').style.display = 'none';
-                document.querySelector('.app-music-home-library').style.visibility = 'hidden';
-                document.querySelector('#app-music-header-startpage').classList.add('active');
-                document.querySelector('#app-music-header-search').classList.remove('active');
-                document.querySelector('#app-music-header-library').classList.remove('active');
-
                 document.querySelector('.app-music-player').style.display = 'none';
                 document.querySelector('.app-music-player').style.visibility = 'hidden';
                 document.querySelector('.app-music-wrapper').style.display = 'none';
