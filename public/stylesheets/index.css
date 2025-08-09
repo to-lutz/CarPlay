@@ -410,7 +410,7 @@ body {
 
 .app-music-home-playlist-container {
     display: flex;
-    gap: 15px;
+    gap: 70px;
     flex-wrap: wrap;
     padding: 10px;
     margin-left: -15px;
@@ -441,8 +441,8 @@ body {
 }
 
 .playlist-image {
-    width: 150px;
-    height: 150px;
+    width: 200px;
+    height: 200px;
     object-fit: cover;
     border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
@@ -454,11 +454,10 @@ body {
 }
 
 .playlist-name {
-    font-size: 14px;
+    font-size: 22px;
     font-weight: 500;
     margin-top: 8px;
     color: #fff;
     text-overflow: ellipsis;
-    white-space: nowrap;
     overflow: hidden;
 }
