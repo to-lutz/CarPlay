@@ -28,7 +28,7 @@ const spotifyApi = new SpotifyWebApi({
 
 app.get('/login', (req, res) => {
   // Define the scopes for authorization; these are the permissions we ask from the user.
-  const scopes = ['user-read-private', 'user-read-email', 'user-read-playback-state', 'user-modify-playback-state'];
+  const scopes = ['user-read-private', 'user-read-email', 'user-read-playback-state', 'user-modify-playback-state', 'playlist-read-private', 'playlist-read-collaborative',];
   // Redirect the client to Spotify's authorization page with the defined scopes.
   res.redirect(spotifyApi.createAuthorizeURL(scopes));
 });
@@ -113,6 +113,16 @@ app.post('/previous', async (req, res) => {
   } catch (error) {
     console.error('Error going to previous track:', error);
     res.status(500).send('Error going to previous track');
+  }
+});
+
+app.get('/playlists', async (req, res) => {
+  try {
+    const data = await spotifyApi.getUserPlaylists();
+    res.json(data.body);
+  } catch (error) {
+    console.error('Error getting playlists:', error);
+    res.status(500).send('Error getting playlists');
   }
 });
 

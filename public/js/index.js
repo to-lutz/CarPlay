@@ -41,6 +41,44 @@ document.querySelector('.time-battery-wrapper').addEventListener('click', () => 
     closeApp();
 });
 
+function fetchAndDisplayPlaylists() {
+    fetch('/playlists')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const playlistsContainer = document.querySelector('.app-music-home-playlist-container');
+            playlistsContainer.innerHTML = ''; // Clear existing content
+
+            if (data.items && data.items.length > 0) {
+                data.items.forEach(playlist => {
+                    const playlistElement = document.createElement('div');
+                    playlistElement.className = 'app-music-home-playlist';
+                    playlistElement.innerHTML = `
+            <div class="playlist-card">
+                <img src="${playlist.images[0]?.url || 'default-image-url.jpg'}" 
+                     alt="${playlist.name}" 
+                     class="playlist-image">
+                <h3 class="playlist-name">${playlist.name}</h3>
+            </div>
+        `;
+                    playlistsContainer.appendChild(playlistElement);
+                });
+            } else {
+                playlistsContainer.innerHTML = '<h1>No playlists found</h1>';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching playlists:', error);
+            document.querySelector('.app-music-home-playlists').innerHTML = `
+                <h1>Error fetching playlists</h1>
+            `;
+        });
+}
+
 document.querySelector('.back-button').addEventListener('click', () => {
     // If in music app, go back to the home screen of the music app
     if (document.querySelector('.app-music').style.display === 'flex') {
@@ -57,6 +95,8 @@ document.querySelector('.back-button').addEventListener('click', () => {
         document.querySelector('.back-button').style.visibility = 'hidden';
         // Show playing button
         document.querySelector('.playing-button').style.visibility = 'visible';
+        // Fetch playlists and display them
+        fetchAndDisplayPlaylists();
     }
 });
 
