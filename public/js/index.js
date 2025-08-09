@@ -382,7 +382,6 @@ function openApp(appName) {
             map.addControl(new maplibregl.NavigationControl());
 
             if ('geolocation' in navigator) {
-                let userMarker = null;
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const lng = position.coords.longitude;
