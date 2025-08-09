@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
         integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet" />
+
 </head>
 
 <body>
@@ -44,6 +46,9 @@
             </div>
         </div>
         <div class="open-app-overlay">
+            <div class="app-overlay app-maps">
+                <div class="map" id="map"></div>
+            </div>
             <div class="app-overlay app-music">
                 <img src="" class="music-album-background"> <!-- ALBUM COVER BACKGROUND COLOR -->
                 <div class="app-music-header">
@@ -168,6 +173,7 @@
     </div>
 
     <script src="../js/index.js"></script>
+    <script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
 
 </body>
 

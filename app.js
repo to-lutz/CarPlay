@@ -170,5 +170,11 @@ app.post('/playlists/:playlistId/playTrack', async (req, res) => {
   }
 });
 
+app.use((req, res, next) => {
+  if (req.path.endsWith('.json')) {
+    res.type('application/json');
+  }
+  next();
+});
 
 module.exports = app;

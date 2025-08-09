@@ -38,7 +38,7 @@ document.querySelectorAll('.app-big').forEach(icon => {
 });
 
 function handleSiriStart() {
-document.querySelector('#siri-border').classList.add('siri-border');
+    document.querySelector('#siri-border').classList.add('siri-border');
 }
 
 function handleSiriStop() {
@@ -368,6 +368,44 @@ function openApp(appName) {
             document.querySelector('.app-music').style.visibility = 'visible';
             startMusicApp();
             break;
+        case 'maps':
+            document.querySelector('.app-maps').style.display = 'flex';
+            document.querySelector('.app-maps').style.visibility = 'visible';
+            // Initialize map
+            const map = new maplibregl.Map({
+                container: 'map',
+                style: 'https://carplay.losagora.net/stylesheets/applemaps.json',
+                center: [13.404954, 52.520008], // Start-Fallback → Berlin
+                zoom: 12
+            });
+
+            map.addControl(new maplibregl.NavigationControl());
+
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lng = position.coords.longitude;
+                        const lat = position.coords.latitude;
+
+                        map.setCenter([lng, lat]);
+                        map.setZoom(15);
+
+                        new maplibregl.Marker({ color: 'blue' })
+                            .setLngLat([lng, lat])
+                            .addTo(map);
+                    },
+                    (error) => {
+                        console.error('Geolocation-Fehler:', error);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                console.warn('Geolocation wird nicht unterstützt');
+            }
     }
 }
 
@@ -379,6 +417,8 @@ function closeApp() {
     // Close all apps
     document.querySelector('.app-music').style.display = 'none';
     document.querySelector('.app-music').style.visibility = 'hidden';
+    document.querySelector('.app-maps').style.display = 'none';
+    document.querySelector('.app-maps').style.visibility = 'hidden';
 }
 
 async function startMusicApp() {
