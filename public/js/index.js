@@ -108,7 +108,6 @@ document.querySelector('#app-music-header-search').addEventListener('click', () 
 });
 
 document.querySelector('#app-music-header-library').addEventListener('click', () => {
-    console.log('Library clicked');
     if (document.querySelector('.app-music').style.display === 'flex') {
         document.querySelector('.app-music-home-start').style.display = 'none';
         document.querySelector('.app-music-home-start').style.visibility = 'hidden';
