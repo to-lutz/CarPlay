@@ -80,46 +80,110 @@ function fetchAndDisplayPlaylists() {
 }
 
 document.querySelector('#app-music-header-startpage').addEventListener('click', () => {
-    if (document.querySelector('.app-music').style.display === 'flex') {
-        document.querySelector('.app-music-home-start').style.display = 'flex';
-        document.querySelector('.app-music-home-start').style.visibility = 'visible';
-        document.querySelector('.app-music-home-search').style.display = 'none';
-        document.querySelector('.app-music-home-search').style.visibility = 'hidden';
-        document.querySelector('.app-music-home-library').style.display = 'none';
-        document.querySelector('.app-music-home-library').style.visibility = 'hidden';
-        document.querySelector('#app-music-header-startpage').classList.add('active');
-        document.querySelector('#app-music-header-search').classList.remove('active');
-        document.querySelector('#app-music-header-library').classList.remove('active');
-    }
+    openMusicAppPage('start');
 });
 
 document.querySelector('#app-music-header-search').addEventListener('click', () => {
-    if (document.querySelector('.app-music').style.display === 'flex') {
-        document.querySelector('.app-music-home-start').style.display = 'none';
-        document.querySelector('.app-music-home-start').style.visibility = 'hidden';
-        document.querySelector('.app-music-home-search').style.display = 'flex';
-        document.querySelector('.app-music-home-search').style.visibility = 'visible';
-        document.querySelector('.app-music-home-library').style.display = 'none';
-        document.querySelector('.app-music-home-library').style.visibility = 'hidden';
-        document.querySelector('#app-music-header-startpage').classList.remove('active');
-        document.querySelector('#app-music-header-search').classList.add('active');
-        document.querySelector('#app-music-header-library').classList.remove('active');
-    }
+    openMusicAppPage('search');
 });
 
 document.querySelector('#app-music-header-library').addEventListener('click', () => {
+    openMusicAppPage('library');
+});
+
+// Swipe Animation
+let startX = 0;
+
+document.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+});
+
+document.addEventListener('touchend', (e) => {
+    const endX = e.changedTouches[0].clientX;
+    const diffX = endX - startX;
+
+    if (Math.abs(diffX) > 50) { // 50px
+        if (diffX > 0) {
+            // Swipe to right - prev page
+            if (document.querySelector('.app-music-player').style.display !== 'none') {
+                document.querySelector('.app-music-home').style.display = 'flex';
+                document.querySelector('.app-music-home').style.visibility = 'visible';
+
+                document.querySelector('.app-music-home-start').style.display = 'flex';
+                document.querySelector('.app-music-home-start').style.visibility = 'visible';
+                document.querySelector('.app-music-home-search').style.display = 'none';
+                document.querySelector('.app-music-home-search').style.visibility = 'hidden';
+                document.querySelector('.app-music-home-library').style.display = 'none';
+                document.querySelector('.app-music-home-library').style.visibility = 'hidden';
+                document.querySelector('#app-music-header-startpage').classList.add('active');
+                document.querySelector('#app-music-header-search').classList.remove('active');
+                document.querySelector('#app-music-header-library').classList.remove('active');
+
+                document.querySelector('.app-music-player').style.display = 'none';
+                document.querySelector('.app-music-player').style.visibility = 'hidden';
+                document.querySelector('.app-music-wrapper').style.display = 'none';
+                document.querySelector('.app-music-wrapper').style.visibility = 'hidden';
+                // Hide album cover
+                document.querySelector('.music-album-background').style.display = 'none';
+                document.querySelector('.music-album-background').style.visibility = 'hidden';
+                // Hide back button
+                document.querySelector('.back-button').style.visibility = 'hidden';
+                // Show playing button
+                document.querySelector('.playing-button').style.visibility = 'visible';
+                // Fetch playlists and display them
+                fetchAndDisplayPlaylists();
+            }
+            if (document.querySelector('.app-music-home').style.display === 'flex') {
+                if (document.querySelector('.app-music-home-search').style.display === 'flex') {
+                    openMusicAppPage('start');
+                } else if (document.querySelector('.app-music-home-library').style.display === 'flex') {
+                    openMusicAppPage('search');
+                }
+            }
+        } else {
+            // Swipe to left - next page
+            if (document.querySelector('.app-music-home').style.display === 'flex') {
+                if (document.querySelector('.app-music-home-start').style.display === 'flex') {
+                    openMusicAppPage('search');
+                } else if (document.querySelector('.app-music-home-search').style.display === 'flex') {
+                    openMusicAppPage('library');
+                }
+            }
+        }
+    }
+});
+
+function openMusicAppPage(page) {
     if (document.querySelector('.app-music').style.display === 'flex') {
         document.querySelector('.app-music-home-start').style.display = 'none';
         document.querySelector('.app-music-home-start').style.visibility = 'hidden';
         document.querySelector('.app-music-home-search').style.display = 'none';
         document.querySelector('.app-music-home-search').style.visibility = 'hidden';
-        document.querySelector('.app-music-home-library').style.display = 'flex';
-        document.querySelector('.app-music-home-library').style.visibility = 'visible';
+        document.querySelector('.app-music-home-library').style.display = 'none';
+        document.querySelector('.app-music-home-library').style.visibility = 'hidden';
         document.querySelector('#app-music-header-startpage').classList.remove('active');
         document.querySelector('#app-music-header-search').classList.remove('active');
-        document.querySelector('#app-music-header-library').classList.add('active');
+        document.querySelector('#app-music-header-library').classList.remove('active');
+
+        switch (page) {
+            case 'start':
+                document.querySelector('.app-music-home-start').style.display = 'flex';
+                document.querySelector('.app-music-home-start').style.visibility = 'visible';
+                document.querySelector('#app-music-header-startpage').classList.add('active');
+                break;
+            case 'search':
+                document.querySelector('.app-music-home-search').style.display = 'flex';
+                document.querySelector('.app-music-home-search').style.visibility = 'visible';
+                document.querySelector('#app-music-header-search').classList.add('active');
+                break;
+            case 'library':
+                document.querySelector('.app-music-home-library').style.display = 'flex';
+                document.querySelector('.app-music-home-library').style.visibility = 'visible';
+                document.querySelector('#app-music-header-library').classList.add('active');
+                break;
+        }
     }
-});
+}
 
 document.querySelector('.back-button').addEventListener('click', () => {
     // If in music app, go back to the home screen of the music app
