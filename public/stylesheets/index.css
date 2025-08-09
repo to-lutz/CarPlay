@@ -228,6 +228,14 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
+.app-music-player {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
 .app-music-left,
 .app-music-right {
     width: 65%;
