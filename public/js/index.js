@@ -47,6 +47,7 @@ document.querySelector('.back-button').addEventListener('click', () => {
 });
 
 function openApp(appName) {
+    closeApp(); // Close any open app first
     document.querySelector('.open-app-overlay').style.display = 'flex';
     document.querySelector('.open-app-overlay').style.visibility = 'visible';
     document.querySelector('.main-page').style.display = 'none';
@@ -65,6 +66,9 @@ function closeApp() {
     document.querySelector('.open-app-overlay').style.visibility = 'hidden';
     document.querySelector('.main-page').style.display = 'flex';
     document.querySelector('.main-page').style.visibility = 'visible';
+    // Close all apps
+    document.querySelector('.app-music').style.display = 'none';
+    document.querySelector('.app-music').style.visibility = 'hidden';
 }
 
 async function startMusicApp() {
