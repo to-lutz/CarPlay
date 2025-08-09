@@ -374,7 +374,7 @@ function openApp(appName) {
             // Initialize map
             const map = new maplibregl.Map({
                 container: 'map',
-                style: 'https://carplay.losagora.net/stylesheets/applemaps.json',
+                style: '/stylesheets/applemaps.json',
                 center: [13.404954, 52.520008], // Start-Fallback → Berlin
                 zoom: 12
             });
@@ -382,6 +382,7 @@ function openApp(appName) {
             map.addControl(new maplibregl.NavigationControl());
 
             if ('geolocation' in navigator) {
+                let userMarker = null;
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const lng = position.coords.longitude;
@@ -390,12 +391,40 @@ function openApp(appName) {
                         map.setCenter([lng, lat]);
                         map.setZoom(15);
 
-                        new maplibregl.Marker({ color: 'blue' })
+                        const markerEl = document.createElement('div');
+                        markerEl.classList.add('app-maps-marker');
+
+                        markerEl.innerHTML = `
+                        <svg
+                            width="17"
+                            height="17"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                            style="transform: rotate(-45deg);"
+                        >
+                            <path
+                            d="M12 2 L19 20 L12 16 L5 20 Z"
+                            fill="white"
+                            stroke="white"
+                            stroke-width="2"
+                            stroke-linejoin="round"
+                            />
+                            <path
+                            d="M12 2 L19 20 L12 16 L5 20 Z"
+                            fill="none"
+                            stroke="white"
+                            stroke-width="2.5"
+                            stroke-linejoin="round"
+                            />
+                        </svg>
+                        `;
+
+                        usermarker = new maplibregl.Marker({ element: markerEl })
                             .setLngLat([lng, lat])
                             .addTo(map);
                     },
                     (error) => {
-                        console.error('Geolocation-Fehler:', error);
+                        alert('Geolocation-Fehler:' + error.code + ' - ' + error.message);
                     },
                     {
                         enableHighAccuracy: true,
@@ -404,10 +433,23 @@ function openApp(appName) {
                     }
                 );
             } else {
-                console.warn('Geolocation wird nicht unterstützt');
+                alert('Geolocation wird nicht unterstützt');
             }
     }
 }
+
+// Rotate maps arrow
+window.addEventListener('deviceorientation', (event) => {
+  const alpha = event.alpha; // Drehung um die Z-Achse (0-360°)
+  if (alpha !== null) {
+    // alpha ist die Kompass-Richtung in Grad
+    // Rotationswinkel für deinen Marker: (360 - alpha) oder (alpha) je nach Ausrichtung
+    const rotation = 360 - alpha; 
+
+    // Marker-Element rotieren:
+    markerEl.style.transform = `rotate(${rotation}deg)`;
+  }
+});
 
 function closeApp() {
     document.querySelector('.open-app-overlay').style.display = 'none';
