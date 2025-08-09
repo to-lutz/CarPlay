@@ -14,7 +14,9 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {
+  maxAge: '0' // oder 'no-cache'
+}))
 
 app.use('/', indexRouter);
 //app.use('/api', apiRouter);
@@ -94,7 +96,7 @@ app.post("/playPause", async (req, res) => {
     console.error('Error toggling play/pause:', error);
     res.status(500).send('Error toggling play/pause');
   }
-}); 
+});
 
 app.post('/skip', async (req, res) => {
   try {
@@ -161,7 +163,7 @@ app.post('/playlists/:playlistId/playTrack', async (req, res) => {
   try {
     const data = await spotifyApi.getPlaylistTracks(playlistId);
     const tracks = data.body.items.map(item => item.track.uri);
-    
+
     await spotifyApi.play({ uris: [trackUri, ...tracks.filter(uri => uri !== trackUri)] });
     res.json({ success: true });
   } catch (error) {
