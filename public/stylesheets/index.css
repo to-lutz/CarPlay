@@ -390,7 +390,12 @@ body {
     background: rgba(255, 255, 255, 0.15);
 }
 
-.app-music-home-start, .app-music-home-search, .app-music-home-library {
+.app-music-home-start {
+    display: flex;
+    visibility: visible;
+}
+
+.app-music-home-search, .app-music-home-library {
     display: none;
     visibility: hidden;
 }
