@@ -93,6 +93,28 @@ function fetchAndDisplayPlaylists() {
                             <span class="app-music-playlist-track-name">Zufällige Wiedergabe</span>
                         </div>
                     `;
+                                shuffleElement.addEventListener('click', () => {
+                                    // Start shuffled playlist
+                                    fetch(`/playlists/${playlist.id}/shuffle`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        }
+                                    })
+                                        .then(response => {
+                                            if (!response.ok) {
+                                                throw new Error(`HTTP error! status: ${response.status}`);
+                                            }
+                                            return response.json();
+                                        })
+                                        .then(() => {
+                                            refreshTrack();
+                                            openPlayerView();
+                                        })
+                                        .catch(error => {
+                                            console.error('Error starting shuffled playlist:', error);
+                                        });
+                                });
 
                                 let dividerElement = document.createElement('hr');
                                 dividerElement.classList.add("app-music-playlist-divider");
