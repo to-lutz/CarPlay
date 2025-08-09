@@ -42,7 +42,6 @@ document.querySelector('.time-battery-wrapper').addEventListener('click', () => 
 });
 
 document.querySelector('.back-button').addEventListener('click', () => {
-    // TODO: Show previous "layer" / page of the app
     // If in music app, go back to the home screen of the music app
     if (document.querySelector('.app-music').style.display === 'flex') {
         document.querySelector('.app-music-home').style.display = 'flex';
@@ -55,8 +54,28 @@ document.querySelector('.back-button').addEventListener('click', () => {
         document.querySelector('.music-album-background').style.display = 'none';
         document.querySelector('.music-album-background').style.visibility = 'hidden';
         // Hide back button
-        document.querySelector('.back-button').style.display = 'none';
         document.querySelector('.back-button').style.visibility = 'hidden';
+        // Show playing button
+        document.querySelector('.playing-button').style.visibility = 'visible';
+    }
+});
+
+document.querySelector('.playing-button').addEventListener('click', () => {
+    // If in music app, go to the player view
+    if (document.querySelector('.app-music').style.display === 'flex') {
+        document.querySelector('.app-music-home').style.display = 'none';
+        document.querySelector('.app-music-home').style.visibility = 'hidden';
+        document.querySelector('.app-music-player').style.display = 'flex';
+        document.querySelector('.app-music-player').style.visibility = 'visible';
+        document.querySelector('.app-music-wrapper').style.display = 'flex';
+        document.querySelector('.app-music-wrapper').style.visibility = 'visible';
+        // Show album cover
+        document.querySelector('.music-album-background').style.display = 'block';
+        document.querySelector('.music-album-background').style.visibility = 'visible';
+        // Show back button
+        document.querySelector('.back-button').style.visibility = 'visible';
+        // Hide playing button
+        document.querySelector('.playing-button').style.visibility = 'hidden';
     }
 });
 
