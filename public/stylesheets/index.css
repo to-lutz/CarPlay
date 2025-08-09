@@ -628,3 +628,7 @@ body {
 .maplibregl-ctrl-bottom-right {
   display: none !important;
 }
+
+.maplibregl-ctrl-top-right {
+  display: none !important;
+}
