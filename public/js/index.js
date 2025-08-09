@@ -58,13 +58,72 @@ function fetchAndDisplayPlaylists() {
                     const playlistElement = document.createElement('div');
                     playlistElement.className = 'app-music-home-playlist';
                     playlistElement.innerHTML = `
-            <div class="playlist-card">
+            <div class="playlist-card" id="${playlist.id}">
                 <img src="${playlist.images[0]?.url || 'default-image-url.jpg'}" 
                      alt="${playlist.name}" 
                      class="playlist-image">
                 <h3 class="playlist-name">${playlist.name}</h3>
             </div>
         `;
+                    playlistElement.addEventListener('click', (event) => {
+                        // Hide home screen
+                        document.querySelector('.app-music-home').style.display = 'none';
+                        document.querySelector('.app-music-home').style.visibility = 'hidden';
+                        // Show playlist view
+                        document.querySelector('.app-music-playlist').style.display = 'flex';
+                        document.querySelector('.app-music-playlist').style.visibility = 'visible';
+                        document.querySelector('.app-music-playlist-name').textContent = playlist.name;
+                        // Fetch and display playlist tracks
+                        fetch(`/playlists/${playlist.id}/tracks`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(`HTTP error! status: ${response.status}`);
+                                }
+                                return response.json();
+                            })
+                            .then(tracksData => {
+                                const tracksContainer = document.querySelector('.app-music-playlist-wrapper');
+                                tracksContainer.innerHTML = ''; // Clear existing tracks
+
+                                const shuffleElement = document.createElement('div');
+                                shuffleElement.className = 'app-music-playlist-element';
+                                shuffleElement.innerHTML = `
+                        <img src="../images/icons/shuffle.png" class="app-music-playlist-cover-shuffle">
+                        <div class="app-music-playlist-info">
+                            <span class="app-music-playlist-track-name">Zufällige Wiedergabe</span>
+                        </div>
+                    `;
+
+                                let dividerElement = document.createElement('hr');
+                                dividerElement.classList.add("app-music-playlist-divider");
+
+                                tracksContainer.appendChild(dividerElement);
+                                tracksContainer.appendChild(shuffleElement);
+
+
+                                if (tracksData.items && tracksData.items.length > 0) {
+                                    tracksData.items.forEach(track => {
+                                        let dividerElement = document.createElement('hr');
+                                        dividerElement.classList.add("app-music-playlist-divider");
+                                        tracksContainer.appendChild(dividerElement);
+                                        const trackElement = document.createElement('div');
+                                        trackElement.className = 'app-music-playlist-element';
+                                        trackElement.innerHTML = `
+                            <img src="${track.track.album.images[0]?.url || 'default-image-url.jpg'}" 
+                                 alt="${track.track.name}" 
+                                 class="app-music-playlist-cover">
+                            <div class="app-music-playlist-info">
+                                <span class="app-music-playlist-track-name">${track.track.name} 
+                                    ${track.track.explicit ? '<span class="explicit-badge" aria-hidden="false">E</span>' : ''}
+                                </span>
+                                <span class="app-music-playlist-track-artist">${track.track.artists.map(artist => artist.name).join(', ')}</span>
+                            </div>
+                        `;
+                                        tracksContainer.appendChild(trackElement);
+                                    });
+                                }
+                            });
+                    });
                     playlistsContainer.appendChild(playlistElement);
                 });
             } else {
@@ -174,9 +233,18 @@ function openMusicAppPage(page) {
     }
 }
 
-document.querySelector('.back-button').addEventListener('click', () => {
+document.querySelectorAll('.back-button').forEach(e => e.addEventListener('click', () => {
     // If in music app, go back to the home screen of the music app
     if (document.querySelector('.app-music').style.display === 'flex') {
+        // Check if in playlist view
+        if (document.querySelector('.app-music-playlist').style.display === 'flex') {
+            document.querySelector('.app-music-playlist').style.display = 'none';
+            document.querySelector('.app-music-playlist').style.visibility = 'hidden';
+            // Show home screen
+            document.querySelector('.app-music-home').style.display = 'flex';
+            document.querySelector('.app-music-home').style.visibility = 'visible';
+            return;
+        }
         document.querySelector('.app-music-home').style.display = 'flex';
         document.querySelector('.app-music-home').style.visibility = 'visible';
 
@@ -194,13 +262,15 @@ document.querySelector('.back-button').addEventListener('click', () => {
         // Fetch playlists and display them
         fetchAndDisplayPlaylists();
     }
-});
+}));
 
 document.querySelector('.playing-button').addEventListener('click', () => {
     // If in music app, go to the player view
     if (document.querySelector('.app-music').style.display === 'flex') {
         document.querySelector('.app-music-home').style.display = 'none';
         document.querySelector('.app-music-home').style.visibility = 'hidden';
+        document.querySelector('.app-music-playlist').style.display = 'none';
+        document.querySelector('.app-music-playlist').style.visibility = 'hidden';
         document.querySelector('.app-music-player').style.display = 'flex';
         document.querySelector('.app-music-player').style.visibility = 'visible';
         document.querySelector('.app-music-wrapper').style.display = 'flex';

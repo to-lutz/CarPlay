@@ -126,5 +126,16 @@ app.get('/playlists', async (req, res) => {
   }
 });
 
+app.get('/playlists/:playlistId/tracks', async (req, res) => {
+  const playlistId = req.params.playlistId;
+  try {
+    const data = await spotifyApi.getPlaylistTracks(playlistId);
+    res.json(data.body);
+  } catch (error) {
+    console.error('Error getting playlist tracks:', error);
+    res.status(500).send('Error getting playlist tracks');
+  }
+});
+
 
 module.exports = app;
