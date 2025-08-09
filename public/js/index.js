@@ -151,12 +151,28 @@ async function refreshTrack() {
             progressBar.style.width = `${(progress / duration) * 100}%`;
             currentTime.textContent = new Date(progress).toISOString().substr(14, 5);
             // Remaining duration in format -m:ss (ex: -2:50)
-            const remainingTime = new Date(duration - progress).toISOString().substr(14,5);
+            const remainingTime = new Date(duration - progress).toISOString().substr(14, 5);
             durationElement.textContent = `-${remainingTime}`;
+            // Show playing button if in music app and home screen
+            if (document.querySelector('.app-music-home').style.display === 'flex' && document.querySelector('.app-music').style.display === 'flex') {
+                document.querySelector('.playing-button').style.visibility = 'visible';
+            }
+
         } else {
-            document.querySelector('.app-music-wrapper').innerHTML = `
-                <h1>No track playing</h1>
-            `;
+            // No track playing
+            document.querySelector('.app-music-home').style.display = 'flex';
+            document.querySelector('.app-music-home').style.visibility = 'visible';
+            document.querySelector('.app-music-player').style.display = 'none';
+            document.querySelector('.app-music-player').style.visibility = 'hidden';
+            document.querySelector('.app-music-wrapper').style.display = 'none';
+            document.querySelector('.app-music-wrapper').style.visibility = 'hidden';
+            // Hide album cover
+            document.querySelector('.music-album-background').style.display = 'none';
+            document.querySelector('.music-album-background').style.visibility = 'hidden';
+            // Hide back button
+            document.querySelector('.back-button').style.visibility = 'hidden';
+            // Hide playing button
+            document.querySelector('.playing-button').style.visibility = 'hidden';
         }
 
     } catch (error) {
