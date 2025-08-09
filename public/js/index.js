@@ -132,8 +132,7 @@ document.addEventListener('touchend', (e) => {
                 document.querySelector('.playing-button').style.visibility = 'visible';
                 // Fetch playlists and display them
                 fetchAndDisplayPlaylists();
-            }
-            if (document.querySelector('.app-music-home').style.display === 'flex') {
+            } else if (document.querySelector('.app-music-home').style.display === 'flex') {
                 if (document.querySelector('.app-music-home-search').style.display === 'flex') {
                     openMusicAppPage('start');
                 } else if (document.querySelector('.app-music-home-library').style.display === 'flex') {
