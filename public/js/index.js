@@ -42,8 +42,22 @@ document.querySelector('.time-battery-wrapper').addEventListener('click', () => 
 });
 
 document.querySelector('.back-button').addEventListener('click', () => {
-    closeApp();
     // TODO: Show previous "layer" / page of the app
+    // If in music app, go back to the home screen of the music app
+    if (document.querySelector('.app-music').style.display === 'flex') {
+        document.querySelector('.app-music-home').style.display = 'flex';
+        document.querySelector('.app-music-home').style.visibility = 'visible';
+        document.querySelector('.app-music-player').style.display = 'none';
+        document.querySelector('.app-music-player').style.visibility = 'hidden';
+        document.querySelector('.app-music-wrapper').style.display = 'none';
+        document.querySelector('.app-music-wrapper').style.visibility = 'hidden';
+        // Hide album cover
+        document.querySelector('.music-album-background').style.display = 'none';
+        document.querySelector('.music-album-background').style.visibility = 'hidden';
+        // Hide back button
+        document.querySelector('.back-button').style.display = 'none';
+        document.querySelector('.back-button').style.visibility = 'hidden';
+    }
 });
 
 function openApp(appName) {

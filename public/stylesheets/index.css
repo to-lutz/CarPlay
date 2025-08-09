@@ -250,6 +250,21 @@ body {
     width: 100%;
 }
 
+.app-music-home {
+    display: none;
+    visibility: hidden;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: rgba(167, 164, 164, 0.2);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 10;
+    padding-left: 175px;
+}
+
 .app-music-left,
 .app-music-right {
     width: 65%;
@@ -335,3 +350,4 @@ body {
   height: 100%;
   background: rgba(255, 255, 255, 0.9);
 }
+
