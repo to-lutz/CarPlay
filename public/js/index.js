@@ -422,7 +422,7 @@ function openApp(appName) {
                             .setLngLat([lng, lat])
                             .addTo(map);
 
-                        drawRoute(map,[lng, lat], [13.4050, 52.5200]); // Example destination (Berlin)
+                        drawRoute(map, [lng, lat], [13.4050, 52.5200]); // Example destination (Berlin)
                     },
                     (error) => {
                         alert('Geolocation-Fehler:' + error.code + ' - ' + error.message);
@@ -464,12 +464,26 @@ async function drawRoute(map, start, end) {
     });
 
     map.addLayer({
+        id: 'route-outline',
+        type: 'line',
+        source: 'route',
+        layout: {
+            'line-join': 'round'
+        },
+        paint: {
+            'line-color': '#349DFE',
+            'line-width': 12
+        }
+    });
+
+
+    map.addLayer({
         id: 'route',
         type: 'line',
         source: 'route',
         paint: {
-            'line-color': '#007aff',
-            'line-width': 6
+            'line-color': '#0072F7',
+            'line-width': 8
         }
     });
 }
