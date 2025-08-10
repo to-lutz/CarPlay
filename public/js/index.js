@@ -421,6 +421,8 @@ function openApp(appName) {
                         usermarker = new maplibregl.Marker({ element: markerEl })
                             .setLngLat([lng, lat])
                             .addTo(map);
+
+                        drawRoute(map,[lng, lat], [13.4050, 52.5200]); // Example destination (Berlin)
                     },
                     (error) => {
                         alert('Geolocation-Fehler:' + error.code + ' - ' + error.message);
@@ -437,17 +439,52 @@ function openApp(appName) {
     }
 }
 
+async function getRoute(start, end) {
+    const url = `https://router.project-osrm.org/route/v1/driving/${start[0]},${start[1]};${end[0]},${end[1]}?overview=full&geometries=geojson&steps=true`;
+    const response = await fetch(url);
+    const json = await response.json();
+    return json.routes[0].geometry;
+}
+
+
+async function drawRoute(map, start, end) {
+    const routeGeoJSON = await getRoute(start, end);
+
+    if (map.getSource('route')) {
+        map.removeLayer('route');
+        map.removeSource('route');
+    }
+
+    map.addSource('route', {
+        type: 'geojson',
+        data: {
+            type: 'Feature',
+            geometry: routeGeoJSON
+        }
+    });
+
+    map.addLayer({
+        id: 'route',
+        type: 'line',
+        source: 'route',
+        paint: {
+            'line-color': '#007aff',
+            'line-width': 6
+        }
+    });
+}
+
 // Rotate maps arrow
 window.addEventListener('deviceorientation', (event) => {
-  const alpha = event.alpha; // Drehung um die Z-Achse (0-360°)
-  if (alpha !== null) {
-    // alpha ist die Kompass-Richtung in Grad
-    // Rotationswinkel für deinen Marker: (360 - alpha) oder (alpha) je nach Ausrichtung
-    const rotation = 360 - alpha; 
+    const alpha = event.alpha; // Drehung um die Z-Achse (0-360°)
+    if (alpha !== null) {
+        // alpha ist die Kompass-Richtung in Grad
+        // Rotationswinkel für deinen Marker: (360 - alpha) oder (alpha) je nach Ausrichtung
+        const rotation = 360 - alpha;
 
-    // Marker-Element rotieren:
-    markerEl.style.transform = `rotate(${rotation}deg)`;
-  }
+        // Marker-Element rotieren:
+        markerEl.style.transform = `rotate(${rotation}deg)`;
+    }
 });
 
 function closeApp() {
