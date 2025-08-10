@@ -426,7 +426,6 @@ function openApp(appName) {
                             el.addEventListener('click', async () => {
                                 const destLng = parseFloat(el.dataset.longitude);
                                 const destLat = parseFloat(el.dataset.latitude);
-                                console.log(`Pinned destination clicked: ${destLng}, ${destLat}`);
 
                                 navigator.geolocation.getCurrentPosition(async position => {
                                     const currentLng = position.coords.longitude;
