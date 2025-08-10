@@ -424,21 +424,26 @@ function openApp(appName) {
 
                         document.querySelectorAll('.pinned-destination').forEach(el => {
                             el.addEventListener('click', async () => {
-                                const long = el.dataset.longitude;
-                                const lat = el.dataset.latitude;
-                                console.log(`Pinned destination clicked: ${long}, ${lat}`);
-                                const destinationCoords = [parseFloat(long), parseFloat(lat)];
+                                const destLng = parseFloat(el.dataset.longitude);
+                                const destLat = parseFloat(el.dataset.latitude);
+                                console.log(`Pinned destination clicked: ${destLng}, ${destLat}`);
 
-                                // Draw route from current location to pinned destination
-                                await drawRoute(map, [lng, lat], destinationCoords);
-                                
-                                // Zoom out to show the entire route
-                                map.fitBounds([
-                                    [Math.min(lng, long), Math.min(lat, lat)],
-                                    [Math.max(lng, long), Math.max(lat, lat)]
-                                ], {
-                                    padding: { top: 50, bottom: 50, left: 50, right: 50 },
-                                    maxZoom: 15
+                                navigator.geolocation.getCurrentPosition(async position => {
+                                    const currentLng = position.coords.longitude;
+                                    const currentLat = position.coords.latitude;
+
+                                    const destinationCoords = [destLng, destLat];
+
+                                    // Route zeichnen
+                                    await drawRoute(map, [currentLng, currentLat], destinationCoords);
+
+                                    map.fitBounds([
+                                        [Math.min(currentLng, destLng), Math.min(currentLat, destLat)],
+                                        [Math.max(currentLng, destLng), Math.max(currentLat, destLat)]
+                                    ], {
+                                        padding: { top: 200, bottom: 200, left: 500, right: 200 },
+                                        maxZoom: 15
+                                    });
                                 });
                             });
                         });
