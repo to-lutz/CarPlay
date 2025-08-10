@@ -422,7 +422,20 @@ function openApp(appName) {
                             .setLngLat([lng, lat])
                             .addTo(map);
 
-                        drawRoute(map, [lng, lat], [13.4050, 52.5200]); // Example destination (Berlin)
+                        document.querySelectorAll('.pinned-destination').forEach(el => {
+                            el.addEventListener('click', async () => {
+                                const long = el.dataset.longitude;
+                                const lat = el.dataset.latitude;
+                                console.log(`Pinned destination clicked: ${long}, ${lat}`);
+                                const destinationCoords = [parseFloat(long), parseFloat(lat)];
+
+                                // Draw route from current location to pinned destination
+                                await drawRoute(map, [lng, lat], destinationCoords);
+                                
+                                // Center map on the pinned destination
+                                map.setCenter(destinationCoords);
+                            });
+                        });
                     },
                     (error) => {
                         alert('Geolocation-Fehler:' + error.code + ' - ' + error.message);
