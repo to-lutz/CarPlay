@@ -432,8 +432,14 @@ function openApp(appName) {
                                 // Draw route from current location to pinned destination
                                 await drawRoute(map, [lng, lat], destinationCoords);
                                 
-                                // Center map on the pinned destination
-                                map.setCenter(destinationCoords);
+                                // Zoom out to show the entire route
+                                map.fitBounds([
+                                    [Math.min(lng, long), Math.min(lat, lat)],
+                                    [Math.max(lng, long), Math.max(lat, lat)]
+                                ], {
+                                    padding: { top: 50, bottom: 50, left: 50, right: 50 },
+                                    maxZoom: 15
+                                });
                             });
                         });
                     },
