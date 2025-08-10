@@ -464,6 +464,7 @@ async function drawRoute(map, start, end) {
     const routeGeoJSON = await getRoute(start, end);
 
     if (map.getSource('route')) {
+        map.removeLayer('route-outline');
         map.removeLayer('route');
         map.removeSource('route');
     }
