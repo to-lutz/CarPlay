@@ -613,24 +613,24 @@ body {
 }
 
 .app-maps-marker {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background-color: #007aff;
-  border: 4px solid white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  transform: rotate(45deg);
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #007aff;
+    border: 4px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    transform: rotate(45deg);
 }
 
 .maplibregl-ctrl-bottom-right {
-  display: none !important;
+    display: none !important;
 }
 
 .maplibregl-ctrl-top-right {
-  display: none !important;
+    display: none !important;
 }
 
 .search-box {
@@ -652,4 +652,43 @@ body {
     align-items: center;
     color: white;
     font-size: 16px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: rgba(177, 188, 211, 0.7);
+    border-radius: 999px;
+    padding: 6px 10px;
+    width: 100%;
+    height: 65px;
+    max-width: 320px;
+    box-sizing: border-box;
+}
+
+.search-icon {
+    font-size: 24px;
+    color: #485468;
+    margin-right: 10px;
+}
+
+.search-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #485468;
+    font-size: 22px;
+    font-family: inherit;
+    width: calc(100% - 40px)
+}
+
+.search-input::placeholder {
+    color: #485468;
+}
+
+.mic-icon {
+    font-size: 22px;
+    color: #485468;
+    margin-left: 10px;
+    cursor: pointer;
 }
