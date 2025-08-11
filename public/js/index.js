@@ -1,4 +1,5 @@
 let map_elem;
+let selected_route_data;
 
 function updateClock() {
     const now = new Date();
@@ -492,10 +493,17 @@ document.querySelector(".route-start-header-close").addEventListener("click", (e
 
 });
 
+document.querySelector(".selected-route-start-button").addEventListener("click", (e) => {
+    document.querySelector(".route-start-box").style.display = "none";
+    document.querySelector(".route-navigation-box-wrapper").style.display = "flex";
+    startNavigation(selected_route_data);
+});
+
 async function getRoute(start, end) {
     const url = `https://router.project-osrm.org/route/v1/driving/${start[0]},${start[1]};${end[0]},${end[1]}?overview=full&geometries=geojson&steps=true`;
     const response = await fetch(url);
     const json = await response.json();
+    selected_route_data = json;
     return json.routes[0];
 }
 

@@ -804,3 +804,35 @@ body {
     font-family: SF-Pro-Semibold;
     font-size: 22px;
 }
+
+.route-navigation-box-wrapper {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.route-navigation-box-top {
+    position: absolute;
+    top: 10px;
+    left: 160px;
+    width: 300px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2B2B2B;
+    border-radius: 24px;
+    height: 100px;
+    padding: 15px;
+    gap: 30px;
+}
+
+.route-navigation-icon {
+    width: 50px;
+}
+
+.route-navigation-instruction {
+    font-family: SF-Pro-Semibold;
+    font-size: 24px;
+}
