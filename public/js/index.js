@@ -440,9 +440,6 @@ function openApp(appName) {
                                         [Math.min(currentLng, destLng), Math.min(currentLat, destLat)],
                                         [Math.max(currentLng, destLng), Math.max(currentLat, destLat)]
                                     ], {
-                                        padding: isMobile
-                                            ? { top: 50, bottom: 50, left: 150, right: 50 }
-                                            : { top: 200, bottom: 200, left: 200, right: 200 },
                                         maxZoom: 15
                                     });
                                 });
