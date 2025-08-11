@@ -436,10 +436,22 @@ function openApp(appName) {
                                     // Route zeichnen
                                     await drawRoute(map, [currentLng, currentLat], destinationCoords);
 
-                                    map.fitBounds([
+                                    const bounds = [
                                         [Math.min(currentLng, destLng), Math.min(currentLat, destLat)],
                                         [Math.max(currentLng, destLng), Math.max(currentLat, destLat)]
-                                    ], {
+                                    ]
+                                    const screenW = window.innerWidth;
+                                    const screenH = window.innerHeight;
+
+                                    const leftPad = Math.min(500, screenW * 0.4);
+
+                                    map.fitBounds(bounds, {
+                                        padding: {
+                                            top: 50,
+                                            bottom: 50,
+                                            left: leftPad,
+                                            right: 50
+                                        },
                                         maxZoom: 15
                                     });
                                 });
