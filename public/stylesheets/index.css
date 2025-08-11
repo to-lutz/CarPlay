@@ -633,7 +633,8 @@ body {
     display: none !important;
 }
 
-.search-box {
+.search-box,
+.route-start-box {
     position: absolute;
     top: 10px;
     left: 160px;
@@ -737,4 +738,26 @@ body {
     font-size: 20px;
     color: white;
     font-family: SF-Pro-Semibold, sans-serif;
+}
+
+.route-start-box {
+    display: none;
+}
+
+.route-start-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 320px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    font-size: 26px;
+    font-family: SF-Pro-Semibold;
+}
+
+.route-start-header-close {
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 5px;
 }
