@@ -426,9 +426,21 @@ function openApp(appName) {
                             .setLngLat([lng, lat])
                             .addTo(map);
 
+
+
                         map.once('load', () => {
+
+                            const point = map.project([lng, lat]);
+
+                            const offsetPoint = {
+                                x: point.x - 10,
+                                y: point.y
+                            };
+
+                            const offsetLngLat = map.unproject(offsetPoint);
+
                             map.flyTo({
-                                center: [lng, lat],
+                                center: [offsetLngLat.lng, offsetLngLat.lat],
                                 zoom: 15,
                                 essential: true
                             });
@@ -505,7 +517,7 @@ document.querySelector(".route-start-header-close").addEventListener("click", (e
             const point = map_elem.project([lng, lat]);
 
             const offsetPoint = {
-                x: point.x - 12,
+                x: point.x - 10,
                 y: point.y
             };
 
