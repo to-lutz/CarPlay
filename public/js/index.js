@@ -398,7 +398,7 @@ function openApp(appName) {
 
                             map.flyTo({
                                 center: [lng, lat],
-                                zoom: 15,
+                                zoom: 20,
                                 essential: true,
                                 offset: [leftPad / 2, 0] // genau wie beim Route schließen
                             });
@@ -442,7 +442,7 @@ function openApp(appName) {
                                             left: leftPad,
                                             right: 50
                                         },
-                                        maxZoom: 15
+                                        maxZoom: 20
                                     });
 
                                     document.querySelector(".search-box").style.display = "none";
@@ -485,7 +485,7 @@ document.querySelector(".route-start-header-close").addEventListener("click", (e
 
             map_elem.flyTo({
                 center: [lng, lat],
-                zoom: 15,
+                zoom: 20,
                 essential: true,
                 offset: [leftPad / 2, 0]  // Verschiebe das Ziel um die Hälfte der linken UI Breite nach rechts
             });
