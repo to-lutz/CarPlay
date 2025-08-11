@@ -433,7 +433,7 @@ function openApp(appName) {
                                     ]
                                     const screenW = window.innerWidth;
 
-                                    const leftPad = Math.min(500, screenW * 0.4);
+                                    const leftPad = 500;
 
                                     map.fitBounds(bounds, {
                                         padding: {
