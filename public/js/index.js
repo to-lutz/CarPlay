@@ -433,7 +433,7 @@ function openApp(appName) {
                             const point = map.project([lng, lat]);
 
                             const offsetPoint = {
-                                x: point.x - 20,
+                                x: point.x - 100,
                                 y: point.y
                             };
 
