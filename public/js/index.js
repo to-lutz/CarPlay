@@ -422,6 +422,14 @@ function openApp(appName) {
                             .setLngLat([lng, lat])
                             .addTo(map);
 
+                        map.once('load', () => {
+                            map.flyTo({
+                                center: [lng, lat],
+                                zoom: 15,
+                                essential: true
+                            });
+                        });
+
                         document.querySelectorAll('.pinned-destination').forEach(el => {
                             el.addEventListener('click', async () => {
                                 const destLng = parseFloat(el.dataset.longitude);
