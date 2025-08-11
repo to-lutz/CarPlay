@@ -1,14 +1,44 @@
 let currentStepIndex = 0;
 let stepsData = []; // gefüllt nach OSRM-Request
 
+const iconMap = {
+    'depart': 'start.svg',
+    'arrive': 'destination.svg',
+    'turn-left': 'turn_left.svg',
+    'turn-right': 'turn_right.svg',
+    'turn-slight-left': 'turn_left_slight.svg',
+    'turn-slight-right': 'turn_right_slight.svg',
+    'turn-sharp-left': 'turn_left_sharp.svg',
+    'turn-sharp-right': 'turn_right_sharp.svg',
+    'straight': 'straight.svg',
+    'fork-left': 'fork_left.svg',
+    'fork-right': 'fork_right.svg',
+    'ramp-left': 'ramp_left.svg',
+    'roundabout-left': 'roundabout_left.svg',
+    'roundabout-right': 'roundabout_right.svg'
+};
+
+function getIconForStep(step) {
+    step = step.stepData;
+    let key = step.maneuver.type;
+    const modifier = step.maneuver.modifier;
+
+    if (modifier && key != "depart" && key != "arrive") {
+        key += '-' + modifier.toLowerCase();
+    }
+    
+    // Falls kein Match, fallback auf 'straight'
+    return `../images/icons/maps_instructions/${iconMap[key] || iconMap['straight']}`;
+}
+
 function startNavigation(routeData) {
-    // Schritte extrahieren
     stepsData = routeData.routes[0].legs[0].steps.map((step) => ({
         location: {
             lat: step.maneuver.location[1],
             lon: step.maneuver.location[0]
         },
-        instruction: buildGermanInstruction(step)
+        instruction: buildGermanInstruction(step),
+        stepData: step
     }));
 
     currentStepIndex = 0;
@@ -58,9 +88,9 @@ function haversineDistance(a, b) {
 }
 
 function showInstruction(index) {
-    console.log(stepsData[index]);
     document.querySelector(".route-navigation-instruction").textContent = stepsData[index].instruction;
-    // TODO: icon aktualisieren
+    const iconPath = getIconForStep(stepsData[index]);
+    document.querySelector(".route-navigation-icon").src = iconPath;
 }
 
 function getStreetName(step) {
