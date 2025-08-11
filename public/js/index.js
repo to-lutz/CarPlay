@@ -373,17 +373,6 @@ function openApp(appName) {
         case 'maps':
             document.querySelector('.app-maps').style.display = 'flex';
             document.querySelector('.app-maps').style.visibility = 'visible';
-            // Initialize map
-            const map = new maplibregl.Map({
-                container: 'map',
-                style: '/stylesheets/applemaps.json',
-                center: [13.404954, 52.520008], // Start-Fallback → Berlin
-                zoom: 12
-            });
-
-            map_elem = map;
-
-            map.addControl(new maplibregl.NavigationControl());
 
             if ('geolocation' in navigator) {
                 navigator.geolocation.getCurrentPosition(
@@ -391,7 +380,17 @@ function openApp(appName) {
                         const lng = position.coords.longitude;
                         const lat = position.coords.latitude;
 
-                        const leftPad = Math.min(500, window.innerWidth * 0.4);
+                        // Initialize map
+                        const map = new maplibregl.Map({
+                            container: 'map',
+                            style: '/stylesheets/applemaps.json',
+                            center: [lng, lat],
+                            zoom: 12
+                        });
+
+                        map_elem = map;
+
+                        map.addControl(new maplibregl.NavigationControl());
 
                         map.once('load', () => {
                             const leftPad = Math.min(500, window.innerWidth * 0.4);
@@ -431,7 +430,6 @@ function openApp(appName) {
                                         [Math.min(currentLng, destLng), Math.min(currentLat, destLat)],
                                         [Math.max(currentLng, destLng), Math.max(currentLat, destLat)]
                                     ]
-                                    const screenW = window.innerWidth;
 
                                     const leftPad = 500;
 
