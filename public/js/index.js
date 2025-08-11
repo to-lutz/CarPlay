@@ -429,21 +429,14 @@ function openApp(appName) {
 
 
                         map.once('load', () => {
+                            if ('geolocation' in navigator) {
+                                navigator.geolocation.getCurrentPosition((position) => {
+                                    const lng = position.coords.longitude;
+                                    const lat = position.coords.latitude;
 
-                            const point = map.project([lng, lat]);
-
-                            const offsetPoint = {
-                                x: point.x - 100,
-                                y: point.y
-                            };
-
-                            const offsetLngLat = map.unproject(offsetPoint);
-
-                            map.flyTo({
-                                center: [offsetLngLat.lng, offsetLngLat.lat],
-                                zoom: 15,
-                                essential: true
-                            });
+                                    flyToWithOffset(lng, lat);
+                                });
+                            }
                         });
 
                         document.querySelectorAll('.pinned-destination').forEach(el => {
@@ -514,26 +507,30 @@ document.querySelector(".route-start-header-close").addEventListener("click", (e
             const lng = position.coords.longitude;
             const lat = position.coords.latitude;
 
-            const point = map_elem.project([lng, lat]);
-
-            const offsetPoint = {
-                x: point.x - 10,
-                y: point.y
-            };
-
-            const offsetLngLat = map_elem.unproject(offsetPoint);
-
-            map_elem.flyTo({
-                center: [offsetLngLat.lng, offsetLngLat.lat],
-                zoom: 15,
-                essential: true
-            });
-
-
-        })
+            flyToWithOffset(lng, lat);
+        });
     }
 
 });
+
+function flyToWithOffset(lng, lat) {
+
+
+    const point = map_elem.project([lng, lat]);
+
+    const offsetPoint = {
+        x: point.x - 10,
+        y: point.y
+    };
+
+    const offsetLngLat = map_elem.unproject(offsetPoint);
+
+    map_elem.flyTo({
+        center: [offsetLngLat.lng, offsetLngLat.lat],
+        zoom: 15,
+        essential: true
+    });
+}
 
 async function getRoute(start, end) {
     const url = `https://router.project-osrm.org/route/v1/driving/${start[0]},${start[1]};${end[0]},${end[1]}?overview=full&geometries=geojson&steps=true`;
