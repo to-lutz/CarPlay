@@ -453,6 +453,9 @@ function openApp(appName) {
                                         },
                                         maxZoom: 15
                                     });
+
+                                    document.querySelector(".search-box").style.display = "none";
+                                    document.querySelector(".route-start-box").style.display = "flex";
                                 });
                             });
                         });
@@ -476,12 +479,27 @@ async function getRoute(start, end) {
     const url = `https://router.project-osrm.org/route/v1/driving/${start[0]},${start[1]};${end[0]},${end[1]}?overview=full&geometries=geojson&steps=true`;
     const response = await fetch(url);
     const json = await response.json();
-    return json.routes[0].geometry;
+    return json.routes[0];
 }
 
 
 async function drawRoute(map, start, end) {
-    const routeGeoJSON = await getRoute(start, end);
+    const route = await getRoute(start, end);
+
+    // Set time to travel, ETA, distance
+    const durationMinutes = Math.round(route.duration / 60);
+    const distanceKm = (route.distance / 1000).toFixed(0);
+    const eta = new Date(Date.now() + route.duration * 1000);
+    const etaStr = eta.toLocaleTimeString('de-DE', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+
+    document.querySelector("#selected-route-time-var").textContent = durationMinutes + " Min.";
+    document.querySelector("#selected-route-eta-distance-var").textContent = etaStr + " | " + distanceKm + " km";
+
+    const routeGeoJSON = route.geometry;
 
     if (map.getSource('route')) {
         map.removeLayer('route-outline');
