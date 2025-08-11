@@ -497,7 +497,7 @@ async function drawRoute(map, start, end) {
     });
 
     document.querySelector("#selected-route-time-var").textContent = durationMinutes + " Min.";
-    document.querySelector("#selected-route-eta-distance-var").textContent = etaStr + " | " + distanceKm + " km";
+    document.querySelector("#selected-route-eta-distance-var").textContent = etaStr + " ETA | " + distanceKm + " km";
 
     const routeGeoJSON = route.geometry;
 
