@@ -1,3 +1,5 @@
+let map_elem;
+
 function updateClock() {
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, '0');
@@ -379,6 +381,8 @@ function openApp(appName) {
                 zoom: 12
             });
 
+            map_elem = map;
+
             map.addControl(new maplibregl.NavigationControl());
 
             if ('geolocation' in navigator) {
@@ -482,6 +486,42 @@ function openApp(appName) {
             }
     }
 }
+
+document.querySelector(".route-start-header-close").addEventListener("click", (e) => {
+    document.querySelector(".search-box").style.display = "flex";
+    document.querySelector(".route-start-box").style.display = "none";
+
+    if (map_elem.getSource('route')) {
+        map_elem.removeLayer('route-outline');
+        map_elem.removeLayer('route');
+        map_elem.removeSource('route');
+    }
+
+    if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const lng = position.coords.longitude;
+            const lat = position.coords.latitude;
+
+            const point = map_elem.project([lng, lat]);
+
+            const offsetPoint = {
+                x: point.x - 12,
+                y: point.y
+            };
+
+            const offsetLngLat = map_elem.unproject(offsetPoint);
+
+            map_elem.flyTo({
+                center: [offsetLngLat.lng, offsetLngLat.lat],
+                zoom: 15,
+                essential: true
+            });
+
+
+        })
+    }
+
+});
 
 async function getRoute(start, end) {
     const url = `https://router.project-osrm.org/route/v1/driving/${start[0]},${start[1]};${end[0]},${end[1]}?overview=full&geometries=geojson&steps=true`;
