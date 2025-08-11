@@ -391,52 +391,26 @@ function openApp(appName) {
                         const lng = position.coords.longitude;
                         const lat = position.coords.latitude;
 
-                        map.setCenter([lng, lat]);
-                        map.setZoom(15);
-
-                        const markerEl = document.createElement('div');
-                        markerEl.classList.add('app-maps-marker');
-
-                        markerEl.innerHTML = `
-                        <svg
-                            width="17"
-                            height="17"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                            style="transform: rotate(-45deg);"
-                        >
-                            <path
-                            d="M12 2 L19 20 L12 16 L5 20 Z"
-                            fill="white"
-                            stroke="white"
-                            stroke-width="2"
-                            stroke-linejoin="round"
-                            />
-                            <path
-                            d="M12 2 L19 20 L12 16 L5 20 Z"
-                            fill="none"
-                            stroke="white"
-                            stroke-width="2.5"
-                            stroke-linejoin="round"
-                            />
-                        </svg>
-                        `;
-
-                        usermarker = new maplibregl.Marker({ element: markerEl })
-                            .setLngLat([lng, lat])
-                            .addTo(map);
-
-
+                        const leftPad = Math.min(500, window.innerWidth * 0.4);
 
                         map.once('load', () => {
-                            if ('geolocation' in navigator) {
-                                navigator.geolocation.getCurrentPosition((position) => {
-                                    const lng = position.coords.longitude;
-                                    const lat = position.coords.latitude;
+                            const leftPad = Math.min(500, window.innerWidth * 0.4);
 
-                                    flyToWithOffset(lng, lat);
-                                });
-                            }
+                            map.flyTo({
+                                center: [lng, lat],
+                                zoom: 15,
+                                essential: true,
+                                offset: [leftPad / 2, 0] // genau wie beim Route schließen
+                            });
+
+                            // Marker hinzufügen
+                            const markerEl = document.createElement('div');
+                            markerEl.classList.add('app-maps-marker');
+                            markerEl.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(-45deg);"> <path d="M12 2 L19 20 L12 16 L5 20 Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/> <path d="M12 2 L19 20 L12 16 L5 20 Z" fill="none" stroke="white" stroke-width="2.5" stroke-linejoin="round"/></svg>`;
+
+                            usermarker = new maplibregl.Marker({ element: markerEl })
+                                .setLngLat([lng, lat])
+                                .addTo(map);
                         });
 
                         document.querySelectorAll('.pinned-destination').forEach(el => {
@@ -507,30 +481,18 @@ document.querySelector(".route-start-header-close").addEventListener("click", (e
             const lng = position.coords.longitude;
             const lat = position.coords.latitude;
 
-            flyToWithOffset(lng, lat);
+            const leftPad = Math.min(500, window.innerWidth * 0.4);
+
+            map_elem.flyTo({
+                center: [lng, lat],
+                zoom: 15,
+                essential: true,
+                offset: [leftPad / 2, 0]  // Verschiebe das Ziel um die Hälfte der linken UI Breite nach rechts
+            });
         });
     }
 
 });
-
-function flyToWithOffset(lng, lat) {
-
-
-    const point = map_elem.project([lng, lat]);
-
-    const offsetPoint = {
-        x: point.x - 10,
-        y: point.y
-    };
-
-    const offsetLngLat = map_elem.unproject(offsetPoint);
-
-    map_elem.flyTo({
-        center: [offsetLngLat.lng, offsetLngLat.lat],
-        zoom: 15,
-        essential: true
-    });
-}
 
 async function getRoute(start, end) {
     const url = `https://router.project-osrm.org/route/v1/driving/${start[0]},${start[1]};${end[0]},${end[1]}?overview=full&geometries=geojson&steps=true`;
