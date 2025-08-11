@@ -496,6 +496,22 @@ document.querySelector(".route-start-header-close").addEventListener("click", (e
 document.querySelector(".selected-route-start-button").addEventListener("click", (e) => {
     document.querySelector(".route-start-box").style.display = "none";
     document.querySelector(".route-navigation-box-wrapper").style.display = "flex";
+    // Zoom to driver
+    if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const lng = position.coords.longitude;
+            const lat = position.coords.latitude;
+
+            const leftPad = Math.min(500, window.innerWidth * 0.4);
+
+            map_elem.flyTo({
+                center: [lng, lat],
+                zoom: 17,
+                essential: true,
+                offset: [leftPad / 2, 0]  // Verschiebe das Ziel um die Hälfte der linken UI Breite nach rechts
+            });
+        });
+    }
     startNavigation(selected_route_data);
 });
 
