@@ -441,7 +441,6 @@ function openApp(appName) {
                                         [Math.max(currentLng, destLng), Math.max(currentLat, destLat)]
                                     ]
                                     const screenW = window.innerWidth;
-                                    const screenH = window.innerHeight;
 
                                     const leftPad = Math.min(500, screenW * 0.4);
 
