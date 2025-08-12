@@ -411,7 +411,7 @@ function openApp(appName) {
 
                                 const markerEl = document.createElement('div');
                                 markerEl.classList.add('app-maps-marker');
-                                markerEl.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(-45deg);">
+                                markerEl.innerHTML = `<svg class="app-maps-marker-svg" width="17" height="17" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(-45deg);">
                         <path d="M12 2 L19 20 L12 16 L5 20 Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
                         <path d="M12 2 L19 20 L12 16 L5 20 Z" fill="none" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
                     </svg>`;
@@ -473,7 +473,7 @@ function openApp(appName) {
                         timeout: 5000,
                         maximumAge: 0
                     }
-                , console.error, {
+                    , console.error, {
                     enableHighAccuracy: true,
                     maximumAge: 1000
                 });
@@ -620,10 +620,12 @@ function initCompass() {
 // Listener hinzufügen
 function addOrientationListener() {
     window.addEventListener('deviceorientation', (event) => {
-        const alpha = event.alpha; // Drehung um Z-Achse
-        if (alpha !== null) {
-            alert("rotation");
-            const rotation = (360 - alpha) % 360;
+        const alpha = event.webkitCompassHeading || event.alpha; // iOS/Android
+        if (alpha !== null && alpha !== undefined) {
+            const rotation = event.webkitCompassHeading
+                ? alpha
+                : (360 - alpha) % 360;
+            let markerEl = document.querySelector(".app-maps-marker-svg");
             markerEl.style.transform = `rotate(${rotation}deg)`;
         }
     });
