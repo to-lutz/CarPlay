@@ -378,6 +378,7 @@ function openApp(appName) {
             startMusicApp();
             break;
         case 'maps':
+            initCompass();
             document.querySelector('.app-maps').style.display = 'flex';
             document.querySelector('.app-maps').style.visibility = 'visible';
 
@@ -600,25 +601,32 @@ async function drawRoute(map, start, end) {
     });
 }
 
-if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+function initCompass() {
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
         DeviceOrientationEvent.requestPermission()
             .then(response => {
                 if (response === 'granted') {
-                    window.addEventListener('deviceorientation', handleOrientation);
+                    addOrientationListener();
+                } else {
+                    console.warn('Zugriff auf Sensoren abgelehnt');
                 }
             })
             .catch(console.error);
-} else {
-    // Android / Desktop
-    window.addEventListener('deviceorientation', handleOrientation);
+    } else {
+        // Android / ältere Browser
+        addOrientationListener();
+    }
 }
 
-function handleOrientation(event) {
-    const alpha = event.alpha;
-    if (alpha !== null) {
-        const rotation = 360 - alpha;
-        markerEl.style.transform = `rotate(${rotation}deg)`;
-    }
+// Listener hinzufügen
+function addOrientationListener() {
+    window.addEventListener('deviceorientation', (event) => {
+        const alpha = event.alpha; // Drehung um Z-Achse
+        if (alpha !== null) {
+            const rotation = (360 - alpha) % 360;
+            markerEl.style.transform = `rotate(${rotation}deg)`;
+        }
+    });
 }
 
 function closeApp() {
