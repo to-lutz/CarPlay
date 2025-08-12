@@ -15,7 +15,10 @@ const iconMap = {
     'fork-right': 'fork_right.svg',
     'ramp-left': 'ramp_left.svg',
     'roundabout-left': 'roundabout_left.svg',
-    'roundabout-right': 'roundabout_right.svg'
+    'roundabout-right': 'roundabout_right.svg',
+    'end of road-left': 'turn_left.svg',
+    'end of road-right': 'turn_right.svg',
+    'end of road-straight': 'straight.svg'
 };
 
 function getIconForStep(step) {
@@ -32,19 +35,21 @@ function getIconForStep(step) {
 }
 
 function startNavigation(routeData) {
-    stepsData = routeData.routes[0].legs[0].steps.map((step) => ({
-        location: {
-            lat: step.maneuver.location[1],
-            lon: step.maneuver.location[0]
-        },
-        instruction: buildGermanInstruction(step),
-        stepData: step
-    }));
+    stepsData = routeData.routes[0].legs[0].steps
+        // Schritt "Straßenname wechselt zu" komplett rausfiltern
+        .filter(step => step.maneuver.type !== 'new name')
+        .map((step) => ({
+            location: {
+                lat: step.maneuver.location[1],
+                lon: step.maneuver.location[0]
+            },
+            instruction: buildGermanInstruction(step),
+            stepData: step
+        }));
 
     currentStepIndex = 0;
     showInstruction(currentStepIndex);
 
-    // Standortüberwachung starten
     navigator.geolocation.watchPosition(onLocationUpdate, console.error, {
         enableHighAccuracy: true,
         maximumAge: 1000
