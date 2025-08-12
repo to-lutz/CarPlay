@@ -26,7 +26,7 @@ function getIconForStep(step) {
     if (modifier && key != "depart" && key != "arrive") {
         key += '-' + modifier.toLowerCase();
     }
-    
+
     // Falls kein Match, fallback auf 'straight'
     return `../images/icons/maps_instructions/${iconMap[key] || iconMap['straight']}`;
 }
@@ -70,7 +70,36 @@ function onLocationUpdate(position) {
             console.log("Navigation beendet");
         }
     }
+
+    if (usermarker) {
+        usermarker.setLngLat(userPos);
+    }
 }
+
+function startSmoothTracking() {
+    function animateMarker() {
+        if (currentPos && targetPos) {
+            // Schrittweise Richtung Ziel bewegen (0.1 = 10% pro Frame)
+            currentPos[0] += (targetPos[0] - currentPos[0]) * 0.1;
+            currentPos[1] += (targetPos[1] - currentPos[1]) * 0.1;
+
+            if (usermarker) {
+                usermarker.setLngLat(currentPos);
+            }
+
+            if (map_elem && mapInitialized) {
+                map_elem.easeTo({
+                    center: currentPos,
+                    duration: 500, // 0.5 Sek. sanftes Nachziehen
+                    essential: true
+                });
+            }
+        }
+        animationFrame = requestAnimationFrame(animateMarker);
+    }
+    animationFrame = requestAnimationFrame(animateMarker);
+}
+
 
 // Hilfsfunktion: Distanz in Metern
 function haversineDistance(a, b) {

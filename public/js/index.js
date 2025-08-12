@@ -1,5 +1,10 @@
 let map_elem;
 let selected_route_data;
+let currentPos = null;
+let targetPos = null;
+let animationFrame;
+let mapInitialized = false;
+let usermarker;
 
 function updateClock() {
     const now = new Date();
@@ -376,79 +381,83 @@ function openApp(appName) {
             document.querySelector('.app-maps').style.visibility = 'visible';
 
             if ('geolocation' in navigator) {
-                navigator.geolocation.getCurrentPosition(
+                navigator.geolocation.watchPosition(
                     (position) => {
                         const lng = position.coords.longitude;
                         const lat = position.coords.latitude;
 
-                        // Initialize map
-                        const map = new maplibregl.Map({
-                            container: 'map',
-                            style: '/stylesheets/applemaps.json',
-                            center: [lng, lat],
-                            zoom: 12
-                        });
+                        if (!mapInitialized) {
+                            // Erste GPS-Position → Karte und Marker erstellen
+                            currentPos = [lng, lat];
+                            targetPos = [lng, lat];
 
-                        map_elem = map;
+                            document.querySelectorAll('.pinned-destination').forEach(el => {
+                                el.addEventListener('click', async () => {
+                                    const destLng = parseFloat(el.dataset.longitude);
+                                    const destLat = parseFloat(el.dataset.latitude);
 
-                        map.addControl(new maplibregl.NavigationControl());
+                                    navigator.geolocation.getCurrentPosition(async position => {
+                                        const currentLng = position.coords.longitude;
+                                        const currentLat = position.coords.latitude;
 
-                        map.once('load', () => {
-                            const leftPad = Math.min(500, window.innerWidth * 0.4);
+                                        const destinationCoords = [destLng, destLat];
 
-                            map.flyTo({
-                                center: [lng, lat],
-                                zoom: 17,
-                                essential: true,
-                                offset: [leftPad / 2, 0] // genau wie beim Route schließen
-                            });
+                                        // Route zeichnen
+                                        await drawRoute(map, [currentLng, currentLat], destinationCoords);
 
-                            // Marker hinzufügen
-                            const markerEl = document.createElement('div');
-                            markerEl.classList.add('app-maps-marker');
-                            markerEl.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(-45deg);"> <path d="M12 2 L19 20 L12 16 L5 20 Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/> <path d="M12 2 L19 20 L12 16 L5 20 Z" fill="none" stroke="white" stroke-width="2.5" stroke-linejoin="round"/></svg>`;
+                                        const bounds = [
+                                            [Math.min(currentLng, destLng), Math.min(currentLat, destLat)],
+                                            [Math.max(currentLng, destLng), Math.max(currentLat, destLat)]
+                                        ]
 
-                            usermarker = new maplibregl.Marker({ element: markerEl })
-                                .setLngLat([lng, lat])
-                                .addTo(map);
-                        });
+                                        const leftPad = 500;
 
-                        document.querySelectorAll('.pinned-destination').forEach(el => {
-                            el.addEventListener('click', async () => {
-                                const destLng = parseFloat(el.dataset.longitude);
-                                const destLat = parseFloat(el.dataset.latitude);
+                                        map.fitBounds(bounds, {
+                                            padding: {
+                                                top: 50,
+                                                bottom: 50,
+                                                left: leftPad,
+                                                right: 50
+                                            },
+                                            maxZoom: 17
+                                        });
 
-                                navigator.geolocation.getCurrentPosition(async position => {
-                                    const currentLng = position.coords.longitude;
-                                    const currentLat = position.coords.latitude;
-
-                                    const destinationCoords = [destLng, destLat];
-
-                                    // Route zeichnen
-                                    await drawRoute(map, [currentLng, currentLat], destinationCoords);
-
-                                    const bounds = [
-                                        [Math.min(currentLng, destLng), Math.min(currentLat, destLat)],
-                                        [Math.max(currentLng, destLng), Math.max(currentLat, destLat)]
-                                    ]
-
-                                    const leftPad = 500;
-
-                                    map.fitBounds(bounds, {
-                                        padding: {
-                                            top: 50,
-                                            bottom: 50,
-                                            left: leftPad,
-                                            right: 50
-                                        },
-                                        maxZoom: 17
+                                        document.querySelector(".search-box").style.display = "none";
+                                        document.querySelector(".route-start-box").style.display = "flex";
                                     });
-
-                                    document.querySelector(".search-box").style.display = "none";
-                                    document.querySelector(".route-start-box").style.display = "flex";
                                 });
                             });
-                        });
+
+                            map = new maplibregl.Map({
+                                container: 'map',
+                                style: '/stylesheets/applemaps.json',
+                                center: [lng, lat],
+                                zoom: 17
+                            });
+
+                            map.addControl(new maplibregl.NavigationControl());
+
+                            map.once('load', () => {
+                                const markerEl = document.createElement('div');
+                                markerEl.classList.add('app-maps-marker');
+                                markerEl.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(-45deg);">
+                        <path d="M12 2 L19 20 L12 16 L5 20 Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M12 2 L19 20 L12 16 L5 20 Z" fill="none" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
+                    </svg>`;
+
+                                usermarker = new maplibregl.Marker({ element: markerEl })
+                                    .setLngLat([lng, lat])
+                                    .addTo(map);
+
+                                mapInitialized = true;
+                                startSmoothTracking();
+                            });
+
+
+                        } else {
+                            // GPS-Update → Zielposition ändern
+                            targetPos = [lng, lat];
+                        }
                     },
                     (error) => {
                         alert('Geolocation-Fehler:' + error.code + ' - ' + error.message);
@@ -458,7 +467,10 @@ function openApp(appName) {
                         timeout: 5000,
                         maximumAge: 0
                     }
-                );
+                    , console.error, {
+                    enableHighAccuracy: true,
+                    maximumAge: 1000
+                });
             } else {
                 alert('Geolocation wird nicht unterstützt');
             }
