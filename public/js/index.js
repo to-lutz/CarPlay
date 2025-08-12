@@ -620,9 +620,9 @@ function initCompass() {
 // Listener hinzufügen
 function addOrientationListener() {
     window.addEventListener('deviceorientation', (event) => {
-        alert("rotation");
         const alpha = event.alpha; // Drehung um Z-Achse
         if (alpha !== null) {
+            alert("rotation");
             const rotation = (360 - alpha) % 360;
             markerEl.style.transform = `rotate(${rotation}deg)`;
         }
