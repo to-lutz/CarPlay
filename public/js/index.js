@@ -613,7 +613,6 @@ function initCompass() {
             })
             .catch(console.error);
     } else {
-        // Android / ältere Browser
         addOrientationListener();
     }
 }
@@ -621,6 +620,7 @@ function initCompass() {
 // Listener hinzufügen
 function addOrientationListener() {
     window.addEventListener('deviceorientation', (event) => {
+        alert("rotation");
         const alpha = event.alpha; // Drehung um Z-Achse
         if (alpha !== null) {
             const rotation = (360 - alpha) % 360;
