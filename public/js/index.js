@@ -600,18 +600,26 @@ async function drawRoute(map, start, end) {
     });
 }
 
-// Rotate maps arrow
-window.addEventListener('deviceorientation', (event) => {
-    const alpha = event.alpha; // Drehung um die Z-Achse (0-360°)
-    if (alpha !== null) {
-        // alpha ist die Kompass-Richtung in Grad
-        // Rotationswinkel für deinen Marker: (360 - alpha) oder (alpha) je nach Ausrichtung
-        const rotation = 360 - alpha;
+if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission()
+            .then(response => {
+                if (response === 'granted') {
+                    window.addEventListener('deviceorientation', handleOrientation);
+                }
+            })
+            .catch(console.error);
+} else {
+    // Android / Desktop
+    window.addEventListener('deviceorientation', handleOrientation);
+}
 
-        // Marker-Element rotieren:
+function handleOrientation(event) {
+    const alpha = event.alpha;
+    if (alpha !== null) {
+        const rotation = 360 - alpha;
         markerEl.style.transform = `rotate(${rotation}deg)`;
     }
-});
+}
 
 function closeApp() {
     document.querySelector('.open-app-overlay').style.display = 'none';
