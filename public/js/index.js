@@ -386,10 +386,38 @@ function openApp(appName) {
                         const lng = position.coords.longitude;
                         const lat = position.coords.latitude;
 
-                        if (!mapInitialized) {
-                            // Erste GPS-Position → Karte und Marker erstellen
-                            currentPos = [lng, lat];
-                            targetPos = [lng, lat];
+                        if (!map_elem) {
+                            // Initialisiere Karte nur beim allerersten Positions-Callback
+                            const map = new maplibregl.Map({
+                                container: 'map',
+                                style: '/stylesheets/applemaps.json',
+                                center: [lng, lat],
+                                zoom: 12
+                            });
+
+                            map_elem = map;
+                            map.addControl(new maplibregl.NavigationControl());
+
+                            map.once('load', () => {
+                                const leftPad = Math.min(500, window.innerWidth * 0.4);
+                                map.flyTo({
+                                    center: [lng, lat],
+                                    zoom: 17,
+                                    essential: true,
+                                    offset: [leftPad / 2, 0]
+                                });
+
+                                const markerEl = document.createElement('div');
+                                markerEl.classList.add('app-maps-marker');
+                                markerEl.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(-45deg);">
+                        <path d="M12 2 L19 20 L12 16 L5 20 Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M12 2 L19 20 L12 16 L5 20 Z" fill="none" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
+                    </svg>`;
+
+                                usermarker = new maplibregl.Marker({ element: markerEl })
+                                    .setLngLat([lng, lat])
+                                    .addTo(map);
+                            });
 
                             document.querySelectorAll('.pinned-destination').forEach(el => {
                                 el.addEventListener('click', async () => {
@@ -428,35 +456,11 @@ function openApp(appName) {
                                 });
                             });
 
-                            map = new maplibregl.Map({
-                                container: 'map',
-                                style: '/stylesheets/applemaps.json',
-                                center: [lng, lat],
-                                zoom: 17
-                            });
-
-                            map.addControl(new maplibregl.NavigationControl());
-
-                            map.once('load', () => {
-                                const markerEl = document.createElement('div');
-                                markerEl.classList.add('app-maps-marker');
-                                markerEl.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(-45deg);">
-                        <path d="M12 2 L19 20 L12 16 L5 20 Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
-                        <path d="M12 2 L19 20 L12 16 L5 20 Z" fill="none" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
-                    </svg>`;
-
-                                usermarker = new maplibregl.Marker({ element: markerEl })
-                                    .setLngLat([lng, lat])
-                                    .addTo(map);
-
-                                mapInitialized = true;
-                                startSmoothTracking();
-                            });
-
-
                         } else {
-                            // GPS-Update → Zielposition ändern
-                            targetPos = [lng, lat];
+                            // Falls Karte schon existiert → Marker updaten
+                            if (usermarker) {
+                                usermarker.setLngLat([lng, lat]);
+                            }
                         }
                     },
                     (error) => {
@@ -467,7 +471,7 @@ function openApp(appName) {
                         timeout: 5000,
                         maximumAge: 0
                     }
-                    , console.error, {
+                , console.error, {
                     enableHighAccuracy: true,
                     maximumAge: 1000
                 });
