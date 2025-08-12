@@ -5,6 +5,7 @@ let targetPos = null;
 let animationFrame;
 let mapInitialized = false;
 let usermarker;
+let fullRouteCoords = [];
 
 function updateClock() {
     const now = new Date();
@@ -542,6 +543,8 @@ async function getRoute(start, end) {
 
 async function drawRoute(map, start, end) {
     const route = await getRoute(start, end);
+
+    fullRouteCoords = route.geometry.coordinates;
 
     // Set time to travel, ETA, distance
     const durationMinutes = Math.round(route.duration / 60);

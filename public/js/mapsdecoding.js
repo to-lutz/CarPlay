@@ -62,6 +62,34 @@ function onLocationUpdate(position) {
         lon: position.coords.longitude
     };
 
+    // Route hinter Marker entfernen
+    if (fullRouteCoords.length > 0 && map_elem && map_elem.getSource('route')) {
+        // Finde nächsten Punkt auf der Route
+        let minDist = Infinity;
+        let closestIndex = 0;
+
+        for (let i = 0; i < fullRouteCoords.length; i++) {
+            const dist = haversineDistance(
+                { lat: userPos.lat, lon: userPos.lon },
+                { lat: fullRouteCoords[i][1], lon: fullRouteCoords[i][0] }
+            );
+            if (dist < minDist) {
+                minDist = dist;
+                closestIndex = i;
+            }
+        }
+
+        const remainingCoords = fullRouteCoords.slice(closestIndex);
+
+        map_elem.getSource('route').setData({
+            type: 'Feature',
+            geometry: {
+                type: 'LineString',
+                coordinates: remainingCoords
+            }
+        });
+    }
+
     if (currentStepIndex >= stepsData.length) return;
 
     const step = stepsData[currentStepIndex];
