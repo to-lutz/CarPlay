@@ -617,14 +617,16 @@ function initCompass() {
     }
 }
 
+
+let orientationOffset = 180;
 // Listener hinzufügen
 function addOrientationListener() {
     window.addEventListener('deviceorientation', (event) => {
         const alpha = event.webkitCompassHeading || event.alpha; // iOS/Android
         if (alpha !== null && alpha !== undefined) {
-            const rotation = event.webkitCompassHeading
-                ? alpha
-                : (360 - alpha) % 360;
+            const rotation = (event.webkitCompassHeading)
+                ? (alpha + orientationOffset) % 360
+                : (360 - alpha + orientationOffset) % 360;
             let markerEl = document.querySelector(".app-maps-marker-svg");
             markerEl.style.transform = `rotate(${rotation}deg)`;
         }
