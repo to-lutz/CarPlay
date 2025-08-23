@@ -666,12 +666,23 @@ async function refreshTrack() {
 
             const songName = item.name;
             const albumName = item.album.name;
-            const albumImage = item.album.images[0].url;
+            let albumImage = null;
+            if (item.album.images[0] != undefined) albumImage = item.album.images[0].url;
             const artists = item.artists.map(artist => artist.name).join(', ');
             const isPlaying = data.is_playing;
 
             document.querySelector('.music-album-background').src = albumImage;
-            document.querySelector('.music-album-cover').src = albumImage
+            if (albumImage != null) {
+                document.querySelector('.app-music-right').style.display = "flex";
+                document.querySelector('.music-album-background').style.display = "block";
+                document.querySelector('.music-album-cover').style.display = "block";
+                document.querySelector('.music-album-cover').src = albumImage;
+            }
+            else {
+                document.querySelector('.app-music-right').style.display = "none";
+                document.querySelector('.music-album-cover').style.display = "none";
+                document.querySelector('.music-album-background').style.display = "none";
+            }
             document.querySelector('#song-name').textContent = songName;
             document.querySelector('#album-name').textContent = albumName;
             document.querySelector('#artist-names').textContent = artists;
@@ -717,6 +728,10 @@ async function refreshTrack() {
         }
 
     } catch (error) {
+
+        console.log(error);
+
+        return;
         console.error('Error fetching current track:', error);
         document.querySelector('.app-music-wrapper').innerHTML = `
             <h1>Error fetching track</h1>
