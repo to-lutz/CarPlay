@@ -671,6 +671,12 @@ async function refreshTrack() {
             const artists = item.artists.map(artist => artist.name).join(', ');
             const isPlaying = data.is_playing;
 
+            // Fetch for possible album cover for no album cover
+            if (albumImage == null) {
+                let fetchedImage = await fetchAlbumImage(albumName, artists.split(',')[0]);
+                if (fetchedImage != null) albumImage = fetchedImage;
+            }
+
             document.querySelector('.music-album-background').src = albumImage;
             if (albumImage != null) {
                 document.querySelector('.app-music-right').style.display = "flex";
@@ -735,6 +741,24 @@ async function refreshTrack() {
         // Redirect to /login
         window.location.href = '/login';
     }
+}
+
+async function fetchAlbumImage(albumName, artistName) {
+    const query = encodeURIComponent(`${albumName} ${artistName}`);
+    const url = `https://itunes.apple.com/search?term=${query}&entity=album&limit=1`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.results && data.results.length > 0) {
+            return data.results[0].artworkUrl100.replace("100x100bb.jpg", "600x600bb.jpg");
+        }
+    } catch (error) {
+        console.error("Error fetching album image:", error);
+    }
+
+    return null;
 }
 
 document.querySelector('.music-control-prev').addEventListener('click', async () => {
