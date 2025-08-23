@@ -618,7 +618,7 @@ function initCompass() {
 }
 
 
-let orientationOffset = 180;
+let orientationOffset = 90;
 // Listener hinzufügen
 function addOrientationListener() {
     window.addEventListener('deviceorientation', (event) => {
