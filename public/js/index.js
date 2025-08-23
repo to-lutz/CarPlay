@@ -728,10 +728,6 @@ async function refreshTrack() {
         }
 
     } catch (error) {
-
-        console.log(error);
-
-        return;
         console.error('Error fetching current track:', error);
         document.querySelector('.app-music-wrapper').innerHTML = `
             <h1>Error fetching track</h1>
