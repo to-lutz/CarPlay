@@ -285,6 +285,10 @@ document.querySelectorAll('.search-input').forEach(input => {
                             <span class="pinned-destination-text">${displayName}</span>`;
                         resultsContainer.appendChild(item);
                         item.addEventListener('click', async () => {
+                            document.querySelector(".search-box").style.display = "none";
+                            document.querySelector(".route-start-box").style.display = "flex";
+
+
                             const destLng = parseFloat(item.dataset.longitude);
                             const destLat = parseFloat(item.dataset.latitude);
 
@@ -313,9 +317,6 @@ document.querySelectorAll('.search-input').forEach(input => {
                                     },
                                     maxZoom: 17
                                 });
-
-                                document.querySelector(".search-box").style.display = "none";
-                                document.querySelector(".route-start-box").style.display = "flex";
                             });
                         });
                     });

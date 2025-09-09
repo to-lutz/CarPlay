@@ -423,6 +423,8 @@ function openApp(appName) {
 
                             document.querySelectorAll('.pinned-destination').forEach(el => {
                                 el.addEventListener('click', async () => {
+                                    document.querySelector(".search-box").style.display = "none";
+                                    document.querySelector(".route-start-box").style.display = "flex";
                                     const destLng = parseFloat(el.dataset.longitude);
                                     const destLat = parseFloat(el.dataset.latitude);
 
@@ -451,9 +453,6 @@ function openApp(appName) {
                                             },
                                             maxZoom: 17
                                         });
-
-                                        document.querySelector(".search-box").style.display = "none";
-                                        document.querySelector(".route-start-box").style.display = "flex";
                                     });
                                 });
                             });
