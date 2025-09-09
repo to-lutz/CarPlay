@@ -3,6 +3,10 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const axios = require("axios");
+const rateLimit = require("express-rate-limit");
+const LRU = require("lru-cache");
+const helmet = require("helmet");
 require('dotenv').config(); // Load environment variables from .env file
 const SpotifyWebApi = require('spotify-web-api-node');
 
@@ -26,6 +30,12 @@ const spotifyApi = new SpotifyWebApi({
   clientId: process.env.SPOTIFY_API_ID,
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
   redirectUri: process.env.REDIRECT_URI
+});
+
+// Simple in-memory cache for recent queries of map locations
+const cache = new LRU({
+  max: 500,
+  ttl: 1000 * 60 * 60, // 1 hour TTL
 });
 
 app.get('/login', (req, res) => {
@@ -171,6 +181,70 @@ app.post('/playlists/:playlistId/playTrack', async (req, res) => {
     res.status(500).send('Error playing track from playlist');
   }
 });
+
+app.get("/api/search", async (req, res) => {
+  try {
+    const q = (req.query.q || "").trim();
+    if (!q) return res.status(400).json({ error: "Missing required parameter: q" });
+
+    const limit = Math.min(50, parseInt(req.query.limit, 10) || 5);
+    const country = req.query.country ? req.query.country.trim() : null;
+
+    const cacheKey = `nomin:${q}|${limit}|${country || ""}`;
+    if (cache.has(cacheKey)) {
+      return res.json({ source: "cache", results: cache.get(cacheKey) });
+    }
+
+    // Nominatim search endpoint
+    const endpoint = "https://nominatim.openstreetmap.org/search";
+    // Build params
+    const params = {
+      q,
+      format: "json",
+      addressdetails: 1,
+      limit,
+      extratags: 1,
+      namedetails: 1,
+    };
+    if (country) params.countrycodes = country; // comma separated a2 codes
+
+    // Nominatim requires a valid User-Agent or "email" param; set a user agent header
+    const headers = {
+      "User-Agent": "CarPlay1.0 (postfach@tolutz.de)",
+      Accept: "application/json",
+    };
+
+    const response = await axios.get(endpoint, { params, headers, timeout: 8000 });
+    const data = Array.isArray(response.data) ? response.data : [];
+
+    // Map to the simplified structure the client asked for
+    const results = data.map((item) => {
+      // name: prefer namedetails or display_name
+      const name =
+        (item.namedetails && (item.namedetails.name || item.namedetails["name:en"])) ||
+        item.display_name ||
+        item.osm_type ||
+        "Unknown";
+
+      return {
+        name,
+        lat: parseFloat(item.lat),
+        lon: parseFloat(item.lon),
+        type: item.type || item.class || null,
+        display_name: item.display_name || null,
+        raw: item, // optionally keep raw result for debugging (remove in prod to save bandwidth)
+      };
+    });
+
+    cache.set(cacheKey, results);
+    return res.json({ source: "nominatim", results });
+  } catch (err) {
+    console.error("Search error:", err?.message || err);
+    // Return a friendly error message but not full stack in production
+    return res.status(500).json({ error: "Search service unavailable" });
+  }
+});
+
 
 app.use((req, res, next) => {
   if (req.path.endsWith('.json')) {
