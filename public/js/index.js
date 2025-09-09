@@ -421,6 +421,8 @@ function openApp(appName) {
                                     .addTo(map);
                             });
 
+                            // TODO: Wayy faster its way too slow
+
                             document.querySelectorAll('.pinned-destination').forEach(el => {
                                 el.addEventListener('click', async () => {
                                     document.querySelector(".search-box").style.display = "none";
