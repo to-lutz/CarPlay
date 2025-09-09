@@ -213,3 +213,82 @@ function extractRouteGerman(osrmData) {
         };
     });
 }
+
+/* Fetch search results for locations while typing in search field with class search-input */
+document.querySelectorAll('.search-input').forEach(input => {
+    let timeout = null;
+    input.addEventListener('input', () => {
+        clearTimeout(timeout);
+        const query = input.value.trim();
+        if (query.length < 1) {
+            document.querySelector('.search-results').style.display = 'none';
+            document.querySelector('.pinned-destinations').style.display = "flex";
+            return;
+        } else {
+            document.querySelector('.search-results').style.display = 'block';
+            document.querySelector('.pinned-destinations').style.display = "none";
+        }
+        timeout = setTimeout(() => {
+            fetch(`/api/search?q=${encodeURIComponent(query)}&limit=5`)
+                .then(res => res.json())
+                .then(data => {
+                    const resultsContainer = document.querySelector('.search-results');
+                    resultsContainer.innerHTML = '';
+                    data.results.forEach(loc => {
+                        const item = document.createElement('div');
+                        item.className = 'pinned-destination';
+                        item.classList.add('search-result-destination');
+                        item.dataset.latitude = loc.lat;
+                        item.dataset.longitude = loc.lon;
+                        const addr = loc.raw.address;
+                        let shortAddress = '';
+
+                        if (addr) {
+                            const street = addr.road || '';
+                            const houseNumber = addr.house_number || '';
+                            const villageOrTown = addr.village || addr.town || '';
+
+                            if (street && houseNumber) {
+                                shortAddress = `${street} ${houseNumber}`;
+                            } else if (street) {
+                                shortAddress = street;
+                            } else if (houseNumber) {
+                                shortAddress = houseNumber;
+                            }
+
+                            if (villageOrTown) {
+                                shortAddress += `, ${villageOrTown}`;
+                            }
+                        }
+
+                        // display name = name OR short haddress if name starts with number
+                        const displayName = loc.name && !/^\d/.test(loc.name) ? loc.name : shortAddress || loc.display_name || 'Unbekannt';
+
+
+                        // use different POI w following mapping: school, office: buildings.png, parking space: car.png, restaurant: food.png, fuelstation: gas.png, fallback: location.png
+                        const poiType = loc.type || '';
+                        let icon = 'location.png';
+                        if (poiType.includes('school') || poiType.includes('university')) {
+                            icon = 'buildings.png';
+                        } else if (poiType.includes('office') || poiType.includes('company')) {
+                            icon = 'buildings.png';
+                        } else if (poiType.includes('parking')) {
+                            icon = 'car.png';
+                        } else if (poiType.includes('restaurant') || poiType.includes('cafe') || poiType.includes('bar')) {
+                            icon = 'food.png';
+                        } else if (poiType.includes('fuel') || poiType.includes('gas')) {
+                            icon = 'gas.png';
+                        } else {
+                            icon = 'location.png';
+                        }
+                        item.innerHTML = `<img src="../images/icons/maps_places/${icon}" alt="POI Icon" class="pinned-destination-icon">
+                            <span class="pinned-destination-text">${displayName}</span>`;
+                        resultsContainer.appendChild(item);
+                    });
+                })
+                .catch(err => {
+                    console.error('Error fetching search results:', err);
+                });
+        }, 300); // Debounce by 300ms
+    });
+});
