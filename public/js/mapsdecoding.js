@@ -284,6 +284,40 @@ document.querySelectorAll('.search-input').forEach(input => {
                         item.innerHTML = `<img src="../images/icons/maps_places/${icon}" alt="POI Icon" class="pinned-destination-icon">
                             <span class="pinned-destination-text">${displayName}</span>`;
                         resultsContainer.appendChild(item);
+                        item.addEventListener('click', async () => {
+                            const destLng = parseFloat(item.dataset.longitude);
+                            const destLat = parseFloat(item.dataset.latitude);
+
+                            navigator.geolocation.getCurrentPosition(async position => {
+                                const currentLng = position.coords.longitude;
+                                const currentLat = position.coords.latitude;
+
+                                const destinationCoords = [destLng, destLat];
+
+                                // Route zeichnen
+                                await drawRoute(map_elem, [currentLng, currentLat], destinationCoords);
+
+                                const bounds = [
+                                    [Math.min(currentLng, destLng), Math.min(currentLat, destLat)],
+                                    [Math.max(currentLng, destLng), Math.max(currentLat, destLat)]
+                                ]
+
+                                const leftPad = 500;
+
+                                map_elem.fitBounds(bounds, {
+                                    padding: {
+                                        top: 50,
+                                        bottom: 50,
+                                        left: leftPad,
+                                        right: 50
+                                    },
+                                    maxZoom: 17
+                                });
+
+                                document.querySelector(".search-box").style.display = "none";
+                                document.querySelector(".route-start-box").style.display = "flex";
+                            });
+                        });
                     });
                 })
                 .catch(err => {
